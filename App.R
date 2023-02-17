@@ -54,7 +54,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session, devMode = TRUE) {
   observeEvent(input$brwz1, browser(), ignoreInit = TRUE)
-  SelectedElem <- reactive(input$selected)
+  SelectedElem <- reactive(input$SelectedElement)
   
   output$SelectedElem <- renderText(SelectedElem())
   

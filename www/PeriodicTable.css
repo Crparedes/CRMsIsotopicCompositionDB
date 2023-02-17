@@ -1,9 +1,11 @@
+/* PeriodicTable adapted from https://codepen.io/mikegolus/pen/OwrPgB, Mike Golus */
 .wrapper {
   position: relative;
   overflow: hidden;
   text-shadow: 0 0 0.4vw currentColor;
   padding: 2%;
   transform: scale(0.9);
+  background-color: #111111;
 }
 .wrapper > input {
   -webkit-appearance: none;
@@ -86,7 +88,7 @@
   padding: 1px;
   text-align: center;
 }
-.element .atomic-weight {
+.element .isotopes {
   position: absolute;
   right: 0;
   top: 0;
@@ -94,7 +96,7 @@
   margin: 0;
   padding: 2px;
   opacity: 0;
-  font-size: 0.15vw;
+  font-size: 0.2vw;
   transition: 200ms;
   text-align: right;
 }
@@ -1785,7 +1787,7 @@
   transition-duration: 500ms;
   transform: scale(0.75);
 }
-.element input[type=radio].activate:checked ~ .square .atomic-weight {
+.element input[type=radio].activate:checked ~ .square .isotopes {
   opacity: 1;
   transition: 500ms;
 }
