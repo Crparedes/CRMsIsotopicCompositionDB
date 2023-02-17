@@ -3,10 +3,11 @@ gc()            # Garbage collector
 # CRMsIsotopicCompositionDataBase
 
 library(shiny)
+library(shinyjs)
 library(shinythemes)
 library(shinydashboard)
 library(shinyWidgets)
-library(shinyjs)
+library(CIAAWconsensus)
 library(ggplot2) #Grammar of graphics
 library(ggfortify)
 library(writexl)
@@ -27,7 +28,7 @@ ui <- fluidPage(
   #                      navbarPage(windowTitle = 'masscor Graphical User Interface', title = Information, position = 'fixed-bottom', theme = shinytheme("flatly")))),
   navbarPage(
     title = title, windowTitle = 'MRCs Isotopic Composition DataBase', id = 'MainNavTabs',# selected = 'Home',
-    theme = shinytheme("flatly"), position = 'fixed-top', collapsible = TRUE, lang = 'en',
+    theme = shinytheme("yeti"), position = 'fixed-top', collapsible = TRUE, lang = 'en',
     tabPanel(
       title = HTML('Explore<br>&nbsp;'), icon = icon('compass'), value = 'Home', 
       tags$hr(), tags$hr(),
@@ -36,27 +37,54 @@ ui <- fluidPage(
         column(
           4, tags$hr(), tags$hr(),
           h3('Element: ', tags$b(textOutput('SelectedElem', inline = TRUE))), 
-          textOutput(outputId = 'WarningMonoIsot'), tags$hr(),
-          actionLink(inputId = 'IsoComCRM', h4('CRMs certified for isotopic composition:')), uiOutput('ListIsoCompCRM'), tags$hr(),
-          actionLink(inputId = 'CalSolCRM', h4('Calibration solution CRMs with Isotopic Composition data:')), uiOutput('ListCalibraCRM'), tags$hr(),
-          actionLink(inputId = 'MatrixCRM', h4('Matrix CRMs with Isotopic Composition data:')), uiOutput('ListMatrixCRM'))), tags$hr(),
+          div(style = 'margin-left: 20px', uiOutput('IUPAC_Message'), tableOutput("IUPAC_Table")),
+          tags$hr(),
+          
+          actionLink(inputId = 'IsoComCRM', h4('CRMs certified for isotopic composition:')),
+          uiOutput('ListIsoCompCRM'), tags$hr(),
+          actionLink(inputId = 'CalSolCRM', h4('Calibration solution CRMs with Isotopic Composition data:')), 
+          uiOutput('ListCalibraCRM'), tags$hr(),
+          actionLink(inputId = 'MatrixCRM', h4('Matrix CRMs with Isotopic Composition data:')), 
+          uiOutput('ListMatrixCRM'))), tags$hr(),
         actionButton(inputId = 'brwz1', label = tags$b('Browser()'))
     ),
     tabPanel(
-      title = HTML('Upload<br>&nbsp;isotopic data'), icon = icon('compass')),
-    
-    tags$div(headTags1, headTags2, headTags3, style = 'display: none'),
-    
-    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "PeriodicTable.css"))
-  ),
+      title = HTML('Upload<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new data'), icon = icon('upload'))
+  ), 
+  
+  tags$div(headTags1, headTags2, headTags3, style = 'display: none'),
+  tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "PeriodicTable.css")),
   includeScript("www/sendID.js")
 )
 
 server <- function(input, output, session, devMode = TRUE) {
   observeEvent(input$brwz1, browser(), ignoreInit = TRUE)
   SelectedElem <- reactive(input$SelectedElement)
+  isotopes <- eventReactive(
+    SelectedElem(), ignoreInit = TRUE,
+    ciaaw.mass.2016[which(ciaaw.mass.2016$element == tolower(SelectedElem())), ])
   
-  output$SelectedElem <- renderText(SelectedElem())
+  
+  IUPAC_Table <- reactive({if (nrow(isotopes()) > 1) return(isotopes())})
+  observe({
+    toggleElement(condition = nrow(isotopes()) > 1, id = 'IUPAC_Table', anim = TRUE, animType = 'fade', time = 1)
+    toggleElement(condition = nrow(isotopes()) > 1, id = 'IsoComCRM', anim = TRUE, animType = 'fade', time = 1)
+    toggleElement(condition = nrow(isotopes()) > 1, id = 'CalSolCRM', anim = TRUE, animType = 'fade', time = 1)
+    toggleElement(condition = nrow(isotopes()) > 1, id = 'MatrixCRM', anim = TRUE, animType = 'fade', time = 1)
+  })
+  IUPAC_Message <- reactive({
+    if (nrow(isotopes()) < 2) {
+      return(tags$h5('Selected element is monoisotopic. No data on isotopic composition was found.', tags$br(),
+                     tags$b('Please select another element')))
+    } else {
+      return(tags$b('IUPAC-CIAAW Isotopic Composition:'))
+    }
+  })
+  
+  
+  output$SelectedElem  <- renderText(SelectedElem())
+  output$IUPAC_Message <- renderUI(IUPAC_Message())
+  output$IUPAC_Table   <- renderTable(IUPAC_Table())
   
 }
 

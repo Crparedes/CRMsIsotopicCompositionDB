@@ -2,7 +2,7 @@
 .wrapper {
   position: relative;
   overflow: hidden;
-  text-shadow: 0 0 0.4vw currentColor;
+  text-shadow: 0 0 0.3vw currentColor;
   padding: 2%;
   transform: scale(0.9);
   background-color: #111111;
@@ -75,6 +75,7 @@
 }
 .element .symbol {
   font-size: 1.1vw;
+  font-weight: 500;
 }
 .element .name {
   font-size: 0.5vw;
@@ -84,6 +85,7 @@
   font-size: 0.45vw;
   left: 0;
   right: 0;
+  opacity: 0.5;
   bottom: 0;
   padding: 1px;
   text-align: center;
