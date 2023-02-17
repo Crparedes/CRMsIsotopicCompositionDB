@@ -29,31 +29,32 @@ ui <- fluidPage(
     title = title, windowTitle = 'MRCs Isotopic Composition DataBase', id = 'MainNavTabs',# selected = 'Home',
     theme = shinytheme("flatly"), position = 'fixed-top', collapsible = TRUE, lang = 'en',
     tabPanel(
-      title = HTML('Home<br>&nbsp;'), icon = icon('compass'), value = 'Home', 
+      title = HTML('Explore<br>&nbsp;'), icon = icon('compass'), value = 'Home', 
       tags$hr(), tags$hr(),
       fluidRow(
-        column(8, includeHTML('PeriodicTable.html')),
-        column(3, h3('Selected element:'), textOutput('SelectedElem'))),
+        column(8, includeHTML('www/PeriodicTable.html')),
+        column(
+          4, tags$hr(), tags$hr(),
+          h3('Element: ', tags$b(textOutput('SelectedElem', inline = TRUE))), 
+          textOutput(outputId = 'WarningMonoIsot'), tags$hr(),
+          actionLink(inputId = 'IsoComCRM', h4('CRMs certified for isotopic composition:')), uiOutput('ListIsoCompCRM'), tags$hr(),
+          actionLink(inputId = 'CalSolCRM', h4('Calibration solution CRMs with Isotopic Composition data:')), uiOutput('ListCalibraCRM'), tags$hr(),
+          actionLink(inputId = 'MatrixCRM', h4('Matrix CRMs with Isotopic Composition data:')), uiOutput('ListMatrixCRM'))), tags$hr(),
         actionButton(inputId = 'brwz1', label = tags$b('Browser()'))
     ),
-    # tabPanel(title = HTML('Create/upload <br>', spcs(7), 'NAWI DCC'), icon = icon('certificate'), value = 'CreateUploadDCC',
-    #          tags$hr(), tags$hr(), manageDCC.UI(id = 'manageDCC')),
-    # tabPanel(title = HTML('Conventional <br>', spcs(7), 'mass correction'), icon = icon('ethernet'), 
-    #          tags$hr(), tags$hr(), conventionalMass.UI(id = 'conventionalMass')),
-    # tabPanel(title = HTML('Air buoyancy <br>', spcs(6), 'correction factors'), icon = icon('leaf'), tags$hr(), tags$hr(), buoyancyCorrections.UI(id = 'MABC')),
-    tags$div(headTags1, headTags2, headTags3, style = 'display: none'), # mainly css code
+    tabPanel(
+      title = HTML('Upload<br>&nbsp;isotopic data'), icon = icon('compass')),
     
-    # CSS files:
-    tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "PeriodicTable.css")
-    )
-  )
+    tags$div(headTags1, headTags2, headTags3, style = 'display: none'),
+    
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "PeriodicTable.css"))
+  ),
+  includeScript("www/sendID.js")
 )
 
 server <- function(input, output, session, devMode = TRUE) {
   observeEvent(input$brwz1, browser(), ignoreInit = TRUE)
-  SelectedElem <- reactiveVal()
-  onclick("Hydrogen", SelectedElem("Hydrogen"))
+  SelectedElem <- reactive(input$selected)
   
   output$SelectedElem <- renderText(SelectedElem())
   
