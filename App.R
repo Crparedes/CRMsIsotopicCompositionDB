@@ -32,9 +32,9 @@ ui <- fluidPage(
       title = HTML('Home<br>&nbsp;'), icon = icon('compass'), value = 'Home', 
       tags$hr(), tags$hr(),
       fluidRow(
-        column(7, includeHTML('PeriodicTable.html'))),
-      #homeMasscor.UI(id = 'homeMasscor'),
-      # actionButton(inputId = 'brwz1', label = tags$b('Browser()')) #Eliminar esta linea
+        column(8, includeHTML('PeriodicTable.html')),
+        column(3, h3('Selected element:'), textOutput('SelectedElem'))),
+        actionButton(inputId = 'brwz1', label = tags$b('Browser()'))
     ),
     # tabPanel(title = HTML('Create/upload <br>', spcs(7), 'NAWI DCC'), icon = icon('certificate'), value = 'CreateUploadDCC',
     #          tags$hr(), tags$hr(), manageDCC.UI(id = 'manageDCC')),
@@ -52,7 +52,10 @@ ui <- fluidPage(
 
 server <- function(input, output, session, devMode = TRUE) {
   observeEvent(input$brwz1, browser(), ignoreInit = TRUE)
+  SelectedElem <- reactiveVal()
+  onclick("Hydrogen", SelectedElem("Hydrogen"))
   
+  output$SelectedElem <- renderText(SelectedElem())
   
 }
 

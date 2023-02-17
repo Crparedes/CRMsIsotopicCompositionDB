@@ -3,6 +3,7 @@
   overflow: hidden;
   text-shadow: 0 0 0.4vw currentColor;
   padding: 2%;
+  transform: scale(0.1);
 }
 .wrapper > input {
   -webkit-appearance: none;
@@ -24,7 +25,7 @@
 
 .element {
   position: relative;
-  font-size: 0.5vw;
+  font-size: 0.6vw;
   padding-bottom: 100%;
   cursor: pointer;
   color: #fff;
@@ -70,10 +71,10 @@
   transition: 200ms;
 }
 .element .symbol {
-  font-size: 1.7vw;
+  font-size: 1vw;
 }
 .element .name {
-  font-size: 0.7vw;
+  font-size: 0.4vw;
 }
 .element .atomic-mass {
   position: absolute;
@@ -1767,11 +1768,11 @@
   pointer-events: all;
 }
 .element input[type=radio].activate:checked ~ .overlay {
-  opacity: 0.75;
+  opacity: 0.85;
 }
 .element input[type=radio].activate:checked ~ .square {
   z-index: 3;
-  transform: scale(3);
+  transform: scale(4);
   transition-duration: 500ms, 0ms, 200ms, 200ms, 200ms, 200ms;
   transition-delay: 0ms;
   outline: none;
@@ -1809,7 +1810,7 @@
 .placeholder {
   position: relative;
   z-index: -1;
-  font-size: 1vw;
+  font-size: 0.7vw;
   padding-bottom: 100%;
   color: #fff;
   transition: 500ms;
@@ -2070,7 +2071,7 @@
   grid-row: 1;
   grid-column-start: 3;
   grid-column-end: 17;
-  font-size: 0.8vw;
+  font-size: 0.4vw;
   line-height: 1.5;
   display: flex;
   align-items: center;
