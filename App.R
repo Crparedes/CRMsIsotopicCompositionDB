@@ -8,6 +8,7 @@ library(shinythemes)
 library(shinydashboard)
 library(shinyWidgets)
 library(CIAAWconsensus)
+library(tidyr)
 library(ggplot2) #Grammar of graphics
 library(ggfortify)
 library(writexl)
@@ -60,9 +61,11 @@ ui <- fluidPage(
 server <- function(input, output, session, devMode = TRUE) {
   observeEvent(input$brwz1, browser(), ignoreInit = TRUE)
   SelectedElem <- reactive(input$SelectedElement)
+  
   isotopes <- eventReactive(
     SelectedElem(), ignoreInit = TRUE,
-    ciaaw.mass.2016[which(ciaaw.mass.2016$element == tolower(SelectedElem())), ])
+    #ciaaw.mass.2016[which(ciaaw.mass.2016$element == tolower(SelectedElem())), ]
+    CIAAW_NatIsotAbunTable[which(CIAAW_NatIsotAbunTable$Element == tolower(SelectedElem())), ])
   
   
   IUPAC_Table <- reactive({if (nrow(isotopes()) > 1) return(isotopes())})
