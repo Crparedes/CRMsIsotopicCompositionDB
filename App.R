@@ -9,6 +9,8 @@ library(shinydashboard)
 library(shinyWidgets)
 library(CIAAWconsensus)
 library(tidyr)
+library(odbc)
+library(RMySQL)
 library(ggplot2) #Grammar of graphics
 library(ggfortify)
 library(writexl)
@@ -70,7 +72,7 @@ server <- function(input, output, session, devMode = TRUE) {
   
   IUPAC_Table <- reactive({if (nrow(isotopes()) > 1) return(isotopes())})
   observe({
-    toggleElement(condition = nrow(isotopes()) > 1, id = 'IUPAC_Table', anim = TRUE, animType = 'fade', time = 1)
+    # toggleElement(condition = nrow(isotopes()) > 1, id = 'IUPAC_Table', anim = TRUE, animType = 'fade', time = 1)
     toggleElement(condition = nrow(isotopes()) > 1, id = 'IsoComCRM', anim = TRUE, animType = 'fade', time = 1)
     toggleElement(condition = nrow(isotopes()) > 1, id = 'CalSolCRM', anim = TRUE, animType = 'fade', time = 1)
     toggleElement(condition = nrow(isotopes()) > 1, id = 'MatrixCRM', anim = TRUE, animType = 'fade', time = 1)
@@ -80,7 +82,7 @@ server <- function(input, output, session, devMode = TRUE) {
       return(tags$h5('Selected element is monoisotopic. No data on isotopic composition was found.', tags$br(),
                      tags$b('Please select another element')))
     } else {
-      return(tags$b('IUPAC-CIAAW Isotopic Composition:'))
+      return(tags$b('CIAAW: Natural isotopic composirion'))
     }
   })
   
