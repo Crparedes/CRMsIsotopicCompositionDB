@@ -1,8 +1,6 @@
-INITI_IsoComCRMTable <- read.csv(file ='www/IsotopicData/RAW_INITIAL_IsoComCRM.csv')
-INITI_IsoComCRMTable['Element'][INITI_IsoComCRMTable['Element'] == ''] <- NA
-INITI_IsoComCRMTable['CRM.name'][INITI_IsoComCRMTable['CRM.name'] == ''] <- NA
+INITI_CRMproducers <- read.csv(file ='www/IsotopicData/RAW_0_CRMproducers.csv')
 
+INITI_IsoComCRM_Info <- read.csv(file ='www/IsotopicData/RAW_0_IsoComCRM_Info.csv')
+INITI_IsoComCRM_DataIR <- read.csv(file ='www/IsotopicData/RAW_0_IsoComCRM_DataIR.csv')
+INITI_IsoComCRM_DataAbundances <- read.csv(file ='www/IsotopicData/RAW_0_IsoComCRM_DataAbundances.csv')
 
-INITI_IsoComCRMTable <- zoo::na.locf(INITI_IsoComCRMTable)
-
-# PArtir la tabla en info y resultados, aparteee

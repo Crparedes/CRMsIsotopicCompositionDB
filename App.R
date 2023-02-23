@@ -21,7 +21,8 @@ library(shinycssloaders)
 
 modules <- with(list(pt = 'Modules/'), paste0(pt, list.files(path = pt)))
 sapply(c(modules), source)
-
+source('www/IsotopicData/01_CIAAW_WebPageRvesting.R')
+source('www/IsotopicData/02_INITIAL_DataTableConstruction.R')
 
 ui <- fluidPage(
   withMathJax(),
@@ -37,8 +38,7 @@ ui <- fluidPage(
       tags$hr(), tags$hr(),
       fluidRow(
         column(8, includeHTML('www/PeriodicTable.html')),
-        column(
-          4, tags$hr(), tags$hr(),
+        column(4, tags$hr(), tags$hr(), #ShowDataUI('ShowData')
           h3('Element: ', tags$b(textOutput('SelectedElem', inline = TRUE))), 
           div(style = 'margin-left: 20px', uiOutput('IUPAC_Message'), tableOutput("IUPAC_Table")),
           tags$hr(),

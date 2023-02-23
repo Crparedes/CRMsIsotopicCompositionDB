@@ -1,0 +1,12 @@
+Element,CRM.name,Lot,Producer,Description,Presentation,URL
+Lead,SRM 981,March 1991,NIST,Common Lead Isotopic Standard,High purity lead wire,https://shop.nist.gov/ccrz__ProductDetails?sku=981&cclcl=en_US
+Lead,SRM 982,December 2004,NIST,Equal-Atom Lead Isotopic Standard,High purity lead wire,https://shop.nist.gov/ccrz__ProductDetails?sku=982&cclcl=en_US
+Lead,SRM 983,December 2004,NIST,Radiogenic Lead Isotopic Standard,High purity lead wire,https://shop.nist.gov/ccrz__ProductDetails?sku=983&cclcl=en_US
+Lead,ALED-1,March 2021,NRC,Lead-206 and lead-207 double spike isotopic standard,Lead solution at 250 mg/kg in 2% nitric acid,https://doi.org/10.4224/crm.2021.aled-1
+Lead,BLED-1,March 2021,NRC,Lead-204 and lead-207 double spike isotopic standard,Lead solution at 100 mg/kg in 2% nitric acid,https://doi.org/10.4224/crm.2021.bled-1
+Lead,CLED-1,March 2021,NRC,Lead-206 and lead-208 double spike isotopic standard,Lead solution at 100 mg/kg in 2% nitric acid,https://doi.org/10.4224/crm.2021.cled-1
+Lead,ELED-1,March 2021,NRC,Equal atom lead isotopic standard,Lead solution at 100 mg/kg in 2% nitric acid,https://doi.org/10.4224/crm.2021.eled-1
+Lead,HIPB-1,April 2020,NRC,High purity lead,High purity lead wire,https://doi.org/10.4224/crm.2020.hipb-1
+Uranium,UCLO-1,August 2020,NRC,Natural Uranium Ore Concentrate (U3O8),Powder natural uranium ore concentrate,https://doi.org/10.4224/crm.2020.uclo-1
+Uranium,UCHI-1,August 2020,NRC,Natural Uranium Ore Concentrate (U3O8),Powder natural uranium ore concentrate,https://doi.org/10.4224/crm.2020.uchi-1
+Uranium,UPER-1,August 2020,NRC,Natural Uranium Ore Concentrate (UO4),Powder natural uranium ore concentrate,https://doi.org/10.4224/crm.2020.uper-1 

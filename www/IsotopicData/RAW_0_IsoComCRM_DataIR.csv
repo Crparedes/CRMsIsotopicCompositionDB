@@ -1,0 +1,52 @@
+Element,CRM.name,Isotopic.ratio,Type,Value,Uncertainty,UncertType,k.factor
+Lead,SRM 981,204Pb/206Pb,Certified,0.059042,0.000037,Expanded,
+Lead,SRM 981,207Pb/206Pb,Certified,0.91464,0.00033,Expanded,
+Lead,SRM 981,208Pb/206Pb,Certified,21.681,0.0008,Expanded,
+Lead,SRM 982,204Pb/206Pb,Certified,0.027219,0.000027,Expanded,
+Lead,SRM 982,207Pb/206Pb,Certified,0.46707,0.0002,Expanded,
+Lead,SRM 982,208Pb/206Pb,Certified,100.016,0.00036,Expanded,
+Lead,SRM 983,204Pb/206Pb,Certified,0.000371,0.00002,Expanded,
+Lead,SRM 983,207Pb/206Pb,Certified,0.071201,0.00004,Expanded,
+Lead,SRM 983,208Pb/206Pb,Certified,0.013619,0.000024,Expanded,
+Lead,ALED-1,204Pb/206Pb,Certified,0.00005,0.00002,Expanded,2
+Lead,ALED-1,207Pb/206Pb,Certified,0.23556,0.00007,Expanded,2
+Lead,ALED-1,208Pb/206Pb,Certified,0.01211,0.00003,Expanded,2
+Lead,ALED-1,204Pb/207Pb,Certified,0.00021,0.00007,Expanded,2
+Lead,ALED-1,206Pb/207Pb,Certified,,0.0013,Expanded,2
+Lead,ALED-1,208Pb/207Pb,Certified,0.05141,0.00015,Expanded,2
+Lead,BLED-1,204Pb/206Pb,Certified,,0.0063,Expanded,2
+Lead,BLED-1,207Pb/206Pb,Certified,,0.0036,Expanded,2
+Lead,BLED-1,208Pb/206Pb,Certified,0.869,0.0009,Expanded,2
+Lead,BLED-1,204Pb/207Pb,Certified,,0.0023,Expanded,2
+Lead,BLED-1,206Pb/207Pb,Certified,0.2869,0.0003,Expanded,2
+Lead,BLED-1,208Pb/207Pb,Certified,0.2493,0.0003,Expanded,2
+Lead,CLED-1,204Pb/206Pb,Certified,0.000019,0.000002,Expanded,2
+Lead,CLED-1,207Pb/206Pb,Certified,0.002661,0.000016,Expanded,2
+Lead,CLED-1,208Pb/206Pb,Certified,,0.00082,Expanded,2
+Lead,CLED-1,204Pb/207Pb,Certified,0.000012,0.000001,Expanded,2
+Lead,CLED-1,206Pb/207Pb,Certified,0.64876,0.00034,Expanded,2
+Lead,CLED-1,208Pb/207Pb,Certified,0.001726,0.00001,Expanded,2
+Lead,ELED-1,204Pb/206Pb,Certified,0.98015,0.00059,Expanded,2
+Lead,ELED-1,207Pb/206Pb,Certified,0.95167,0.00036,Expanded,2
+Lead,ELED-1,208Pb/206Pb,Certified,1.04043,0.00052,Expanded,2
+Lead,ELED-1,204Pb/207Pb,Certified,1.02992,0.00072,Expanded,2
+Lead,ELED-1,206Pb/207Pb,Certified,1.05078,0.0004,Expanded,2
+Lead,ELED-1,208Pb/207Pb,Certified,1.09327,0.00069,Expanded,2
+Lead,HIPB-1,206Pb/204Pb,Certified,21.133,0.014,Expanded,2
+Lead,HIPB-1,207Pb/204Pb,Certified,15.873,0.014,Expanded,2
+Lead,HIPB-1,208Pb/204Pb,Certified,39.99,0.04,Expanded,2
+Lead,HIPB-1,204Pb/206Pb,Certified,0.049319,0.00003,Expanded,2
+Lead,HIPB-1,207Pb/206Pb,Certified,0.75107,0.00022,Expanded,2
+Lead,HIPB-1,208Pb/206Pb,Certified,,0.001,Expanded,2
+Lead,HIPB-1,204Pb/207Pb,Certified,0.063,0.00006,Expanded,2
+Lead,HIPB-1,206Pb/207Pb,Certified,,0.0004,Expanded,2
+Lead,HIPB-1,208Pb/207Pb,Certified,,0.0008,Expanded,2
+Lead,HIPB-1,204Pb/208Pb,Certified,0.02501,0.000026,Expanded,2
+Lead,HIPB-1,206Pb/208Pb,Certified,0.52849,0.00028,Expanded,2
+Lead,HIPB-1,207Pb/208Pb,Certified,0.39694,0.00012,Expanded,2
+Uranium,UCLO-1,234U/238U,Certified,0.00005304,0.00000007,Expanded,2
+Uranium,UCLO-1,235U/238U,Certified,0.0072563,0.0000013,Expanded,2
+Uranium,UCHI-1,234U/238U,Certified,0.00005475,0.00000002,Expanded,2
+Uranium,UCHI-1,235U/238U,Certified,0.0072563,0.000001,Expanded,2
+Uranium,UPER-1,234U/238U,Certified,0.00005361,0.00000004,Expanded,2
+Uranium,UPER-1,235U/238U,Certified,0.0072542,0.0000011,Expanded,2
