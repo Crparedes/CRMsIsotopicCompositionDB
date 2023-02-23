@@ -16,6 +16,7 @@ library(ggfortify)
 library(writexl)
 library(rhandsontable)
 library(shinycssloaders)
+
 #library(htmlwidgets)
 #library(htmltools)
 
@@ -23,37 +24,48 @@ modules <- with(list(pt = 'Modules/'), paste0(pt, list.files(path = pt)))
 sapply(c(modules), source)
 source('www/IsotopicData/01_CIAAW_WebPageRvesting.R')
 source('www/IsotopicData/02_INITIAL_DataTableConstruction.R')
+GenericPeriodicTable <- read.csv(file = 'www/IsotopicData/RAW_GenericPeriodicTable.csv')
+
+ShyTheme <- shinytheme("yeti")
+windowTitle <- 'MRCs Isotopic Composition DataBase'
 
 ui <- fluidPage(
   withMathJax(),
   useShinyjs(),
-  # conditionalPanel(condition = "input.MainNavTabs == 'Home'",
-  #                  div(class = "navbar2", 
-  #                      navbarPage(windowTitle = 'masscor Graphical User Interface', title = Information, position = 'fixed-bottom', theme = shinytheme("flatly")))),
   navbarPage(
     title = title, windowTitle = 'MRCs Isotopic Composition DataBase', id = 'MainNavTabs',# selected = 'Home',
-    theme = shinytheme("yeti"), position = 'fixed-top', collapsible = TRUE, lang = 'en',
+    theme = ShyTheme, position = 'fixed-top', collapsible = TRUE, lang = 'en',
     tabPanel(
-      title = HTML('Explore<br>&nbsp;'), icon = icon('compass'), value = 'Home', 
-      tags$hr(), tags$hr(),
+      title = HTML('Search<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), 
+      icon = icon('compass'), value = 'Home', tags$hr(), tags$hr(),
       fluidRow(
-        column(8, includeHTML('www/PeriodicTable.html')),
-        column(4, tags$hr(), tags$hr(), #ShowDataUI('ShowData')
-          h3('Element: ', tags$b(textOutput('SelectedElem', inline = TRUE))), 
-          div(style = 'margin-left: 20px', uiOutput('IUPAC_Message'), tableOutput("IUPAC_Table")),
-          tags$hr(),
-          
-          actionLink(inputId = 'IsoComCRM', h4('CRMs certified for isotopic composition:')),
-          uiOutput('ListIsoCompCRM'), tags$hr(),
-          actionLink(inputId = 'CalSolCRM', h4('Calibration solution CRMs with Isotopic Composition data:')), 
-          uiOutput('ListCalibraCRM'), tags$hr(),
-          actionLink(inputId = 'MatrixCRM', h4('Matrix CRMs with Isotopic Composition data:')), 
-          uiOutput('ListMatrixCRM'))), tags$hr(),
-        actionButton(inputId = 'brwz1', label = tags$b('Browser()'))
+        column(
+          8, 
+          # selectizeInput(
+          #   inputId = 'SelectedElement', label = NULL, choices = GenericPeriodicTable$Element,
+          #   selected = NULL,
+          #   options = list(placeholder = 'Write an element or choose it from the periodic table.',
+          #                  onInitialize = I('function() { this.setValue(""); }'))),
+          h4(style = 'margin-left: 50px;', ('Select an element from the periodic table below:')),
+          includeHTML('www/PeriodicTable.html')), ShowDataUI('ShowData')
+      )
     ),
     tabPanel(
-      title = HTML('Upload<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new data'), icon = icon('upload'))
-  ), 
+      title = HTML('Add<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new data'), icon = icon('upload'),
+      UploadDataUI('UploadData')
+    ),
+    tabPanel(
+      title = HTML('About the App &<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bibliography'), icon = icon('book'),
+      BibliographyUI('Bibliography')
+    ),
+    footer = tags$div(
+      style = 'margin-left: 50px; margin-top: 20px',
+      materialSwitch(inputId = 'Desarrollador', status = 'primary', value = FALSE,
+                     label = h6(style = "display: inline;", 'Developer tools')),
+      uiOutput('brwz'))
+  ),
+  
+  div(class = "navbar2", navbarPage(Disclaimer, position = 'fixed-bottom', theme = ShyTheme)), 
   
   tags$div(headTags1, headTags2, headTags3, style = 'display: none'),
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "PeriodicTable.css")),
@@ -61,35 +73,14 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session, devMode = TRUE) {
-  observeEvent(input$brwz1, browser(), ignoreInit = TRUE)
+  devMode <- reactive(input$Desarrollador)
+  output$brwz <- renderUI(
+    if(devMode()) return(actionButton(inputId = 'brwz', label = tags$b('Pause App'))))
+  observeEvent(input$brwz, browser())
+  
   SelectedElem <- reactive(input$SelectedElement)
   
-  isotopes <- eventReactive(
-    SelectedElem(), ignoreInit = TRUE,
-    #ciaaw.mass.2016[which(ciaaw.mass.2016$element == tolower(SelectedElem())), ]
-    CIAAW_NatIsotAbunTable[which(CIAAW_NatIsotAbunTable$Element == tolower(SelectedElem())), ])
-  
-  
-  IUPAC_Table <- reactive({if (nrow(isotopes()) > 1) return(isotopes())})
-  observe({
-    # toggleElement(condition = nrow(isotopes()) > 1, id = 'IUPAC_Table', anim = TRUE, animType = 'fade', time = 1)
-    toggleElement(condition = nrow(isotopes()) > 1, id = 'IsoComCRM', anim = TRUE, animType = 'fade', time = 1)
-    toggleElement(condition = nrow(isotopes()) > 1, id = 'CalSolCRM', anim = TRUE, animType = 'fade', time = 1)
-    toggleElement(condition = nrow(isotopes()) > 1, id = 'MatrixCRM', anim = TRUE, animType = 'fade', time = 1)
-  })
-  IUPAC_Message <- reactive({
-    if (nrow(isotopes()) < 2) {
-      return(tags$h5('Selected element is monoisotopic. No data on isotopic composition was found.', tags$br(),
-                     tags$b('Please select another element')))
-    } else {
-      return(tags$b('CIAAW: Natural isotopic composirion'))
-    }
-  })
-  
-  
-  output$SelectedElem  <- renderText(SelectedElem())
-  output$IUPAC_Message <- renderUI(IUPAC_Message())
-  output$IUPAC_Table   <- renderTable(IUPAC_Table())
+  ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem)
   
 }
 

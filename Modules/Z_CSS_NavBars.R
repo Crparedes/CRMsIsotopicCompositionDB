@@ -41,39 +41,17 @@ headTags2 <- tags$li(
     tags$style(HTML('
     .btn-default {
         color: #ffffff;
-        background-color: #59748f;
-        border-color: #59748f;
+        background-color: #222222;
+        border-color: #222222;
     }')),
     #Second navigation bar
-    tags$style(
-      type = "text/css", 
-      ".navbar2
-      .navbar {
-        height: 70px;
-        min-height: 70px !important;
-      }
-      .navbar2.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
-        color: #dddddd;
-        background-color: #243341;
-        font-size:15px;
-        font-weight: bold;
-        vertical-align: bottom;
-        display: table-cell;
-      }
-      .navbar2.navbar-default .navbar-nav>li>a {
-        color: #9f9f9f;
-        font-size:15px;
-        font-weight: bold;
-        vertical-align: bottom;
-        display: table-cell;
-      }
-      .navbar2.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {
-        color: #ffffff;
-        background-color: transparent;
-      }
-      .navbar2.navbar-default .navbar-nav>li>a {
-        color: #33aeb7;
-        text-decoration: none;
-      }")
+     tags$style(
+       type = "text/css", 
+       ".navbar2
+       .navbar {
+         height: 40px;
+         min-height: 40px !important;
+       }"
+     )
     )
   )

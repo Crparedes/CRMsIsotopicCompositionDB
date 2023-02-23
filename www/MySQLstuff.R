@@ -21,6 +21,8 @@ dbWriteTable(conn = MRCsICDB, name = 'CRMproducers', value = INITI_CRMproducers)
 dbWriteTable(conn = MRCsICDB, name = 'IsoComCRM_Info', value = INITI_IsoComCRM_Info)
 dbWriteTable(conn = MRCsICDB, name = 'IsoComCRM_DataIR', value = INITI_IsoComCRM_DataIR)
 dbWriteTable(conn = MRCsICDB, name = 'IsoComCRM_DataAbundances', value = INITI_IsoComCRM_DataAbundances)
+# dbWriteTable(conn = MRCsICDB, name = 'GenericPeriodicTable', value = GenericPeriodicTable)
+
 
 dbListTables(MRCsICDB)
 

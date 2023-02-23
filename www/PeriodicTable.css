@@ -1,5 +1,6 @@
 /* PeriodicTable adapted from https://codepen.io/mikegolus/pen/OwrPgB, Mike Golus */
 .wrapper {
+  margin-top: -30px;
   position: relative;
   overflow: hidden;
   text-shadow: 0 0 0.3vw currentColor;
