@@ -9,6 +9,7 @@ library(shinydashboard)
 library(shinyWidgets)
 library(CIAAWconsensus)
 library(tidyr)
+library(stringr)
 library(odbc)
 library(RMySQL)
 library(ggplot2) #Grammar of graphics
@@ -36,7 +37,7 @@ ui <- fluidPage(
     title = title, windowTitle = 'MRCs Isotopic Composition DataBase', id = 'MainNavTabs',# selected = 'Home',
     theme = ShyTheme, position = 'fixed-top', collapsible = TRUE, lang = 'en',
     tabPanel(
-      title = HTML('Search<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), 
+      title = HTML('Explore<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), 
       icon = icon('compass'), value = 'Home', tags$hr(), tags$hr(),
       fluidRow(
         column(
@@ -55,7 +56,7 @@ ui <- fluidPage(
       UploadDataUI('UploadData')
     ),
     tabPanel(
-      title = HTML('About the App &<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bibliography'), icon = icon('book'),
+      title = HTML('About the App,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bibliography'), icon = icon('book'),
       BibliographyUI('Bibliography')
     ),
     footer = tags$div(

@@ -20,7 +20,7 @@ BibliographyUI <- function(id, label = "Counter", FlTy = 'Excel') {
                  href = 'https://CRAN.R-project.org/package=CIAAWconsensus', target = '_blank')),
         tags$br(), tags$br(),
         tags$li(
-          style = 'margin-top:20px;',
+          style = 'margin-top:10px;',
           'The periodic table widget was adapted from an Open Source', 
           tags$a('CodePen Project,', href = 'https://codepen.io/mikegolus/pen/OwrPgB', target = '_blank'),
           'by', tags$a('Mike Golus.', href = 'https://www.mikegolus.com/', target = '_blank'))
