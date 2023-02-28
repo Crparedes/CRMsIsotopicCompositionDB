@@ -11,6 +11,7 @@ title <- tags$div(HTML(
   '</th>
   <th><h1 style="LINE-HEIGHT:25px; color: #dddddd; margin-bottom: 5px;">
     <b>Isotopic Composition Database</b>
+    <b style="LINE-HEIGHT:5px; color: #dddddd; font-size:14px;">v.0.0.1.9000</b>
   </h1></th></tr>
   <tr><th><h3 style="LINE-HEIGHT:0px; color: #dddddd; margin-top: 20px;">
   for Certified Reference Materials
@@ -19,6 +20,7 @@ title <- tags$div(HTML(
 
 Disclaimer <- h6(
   tags$b('Disclaimer:'),
-  'This Web App is made available freely in the hope that it will be useful, but is provided WITHOUT ANY WARRANTY, 
+  tags$b('THIS WEB APP IS UNDER DEVELOPMENT.'), 
+  'This tool is made available freely in the hope that it will be useful, but is provided WITHOUT ANY WARRANTY, 
   to the extent permitted by law; without even the implied warranty of MERCHANTABILITY or
   FITNESS FOR A PARTICULAR PURPOSE.')

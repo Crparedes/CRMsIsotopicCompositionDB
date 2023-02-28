@@ -32,7 +32,7 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         )
       
       
-      IUPAC_Table <- reactive({if (nrow(isotopes()) > 1) return(isotopes[, 1:2])})
+      IUPAC_Table <- reactive({if (nrow(isotopes()) > 1) return(isotopes()[, 1:2])})
       
       delay(0, {hide(selector = "IsoComCRM"); hide(selector = "CalSolCRM"); hide(selector = "MatrixCRM")})
       observe({
@@ -44,18 +44,23 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       
       IUPAC_CIAAW <- reactive({
         if (nrow(isotopes()) < 2) {
-          return(tags$h5('Selected element is monoisotopic. No data on isotopic composition was found.', tags$br(),
+          return(tags$h5('Selected element is monoisotopic or has no stable isotopes.
+                         No data on isotopic composition was found.', tags$br(),
                          tags$b('Please select another element')))
         } else {
-          Notes <- CIAAW_NatIsotAbunFtnts[CIAAW_NatIsotAbunFtnts$Note == strsplit(isotopes()$Notes[1], ' ')[[1]], 2]
-          
+          Notes <- CIAAW_NatIsotAbunFtnts[CIAAW_NatIsotAbunFtnts$Note == strsplit(isotopes()$Notes[1], '')[[1]], 2]
+          UncertStat <- ifelse(
+            isotopes()$Interval[1], 
+            'Intervals for the relative abundances are given for the elements whose isotopic composition vary significantly in nature.',
+            'Uncertainties are given  in parentheses, following the last significant digit to which they are attributed.')
+          Notes <- as.list(c(UncertStat, Notes))
           
           return(tags$div(
             tags$b('CIAAW data on natural isotopic composition'),
             tableOutput(session$ns('IUPAC_Table')),
-            ifelse(isotopes$Interval[1], 'Number in parenthesis correspond to uncertainty ... ', 
-                   'Intervals for relatives abundances are given'),
-            Notes))
+            h6(tags$b('Notes:'), 
+               tags$ul(HTML(paste0(lapply(Notes, FUN = function(x) return(as.character(tags$li(x)))), collapse = ''))))
+            ))
         }
       })
       
