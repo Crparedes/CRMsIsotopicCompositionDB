@@ -21,7 +21,7 @@ are.null.empty <- function(x) {
 }
 
 
-niceSeparator <- function(){return(tags$hr(style = "border-top: 5px solid #2c3e50;"))}
+niceSeparator <- function(){return(tags$hr(style = "border-top: 3px solid #2c3e50;"))}
 
 EnsureMinValue <- function(x, min) {return(max(na.omit(c(x, min))))}
 

@@ -80,7 +80,10 @@ ui <- fluidPage(
 server <- function(input, output, session, devMode = TRUE) {
   devMode <- reactive(input$Desarrollador)
   output$brwz <- renderUI(
-    if(devMode()) return(actionButton(inputId = 'brwz', label = tags$b('Pause App'))))
+    if(devMode()) return(tags$div(
+      tags$b('These buttons will not work if running in a server.'), tags$br(),
+      actionButton(inputId = 'brwz', label = tags$b('Pause App'))
+      )))
   observeEvent(input$brwz, browser())
   
   SelectedElem <- reactive(input$SelectedElement)
