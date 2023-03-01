@@ -11,10 +11,10 @@ ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
     h4(style = 'margin-left: 10px', tags$b('Certified Reference Materials')),
     (div(
       style = 'margin: 20px', class = 'CRMsActionLinks',
-      actionLink(inputId = ns('AcLnk_IsoComCRM'), icon = icon('atom'), style = 'display: inline;',
+      actionLink(inputId = ns('AcLnk_IsoCompCRM'), icon = icon('atom'), style = 'display: inline;',
                  tags$b(' With certified values for isotopic composition')),
       uiOutput(ns('ListIsoCompCRM')), tags$br(),
-      actionLink(inputId = ns('AcLnk_CalSolCRM'), icon = icon('flask'), style = 'display: inline;',
+      actionLink(inputId = ns('AcLnk_CalibraCRM'), icon = icon('flask'), style = 'display: inline;',
                  tags$b(' Calibration solutions and high purity solids')), 
       uiOutput(ns('ListCalibraCRM')), tags$br(),
       actionLink(inputId = ns('AcLnk_MatrixCRM'), icon = icon('carrot'), style = 'display: inline;',
@@ -42,15 +42,10 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
   
         observe(toggleElement(
           condition = nrow(isotopes()) > 1, selector = 'div.CRMsActionLinks', anim = TRUE, animType = 'fade', time = 1))
-        observeEvent(input$AcLnk_IsoComCRM, toggle(selector = 'div.List_IsoComCRM', anim = TRUE, animType = 'fade', time = 0.4))
-        #   toggleElement(condition = input$AcLnk_IsoComCRM %% 2 == 1, selector = 'div.List_IsoComCRM',
-        #                 anim = TRUE, animType = 'fade', time = 0.4)
-        #   toggleElement(condition = input$AcLnk_CalSolCRM %% 2 == 0, selector = 'div.List_CalSolCRM',
-        #                 anim = TRUE, animType = 'fade', time = 0.4)
-        #   toggleElement(condition = input$AcLnk_MatrixCRM %% 2 == 0, selector = 'div.List_MatrixCRM',
-        #                 anim = TRUE, animType = 'fade', time = 0.4)
-        # })
-              
+        observeEvent(input$AcLnk_IsoCompCRM, toggle(selector = 'div.List_IsoCompCRM', anim = TRUE, animType = 'fade', time = 0.4))
+        observeEvent(input$AcLnk_CalibraCRM, toggle(selector = 'div.List_CalibraCRM', anim = TRUE, animType = 'fade', time = 0.4))
+        observeEvent(input$AcLnk_MatrixCRM, toggle(selector = 'div.List_MatrixCRM', anim = TRUE, animType = 'fade', time = 0.4))
+
         IUPAC_Table <- reactive({if (nrow(isotopes()) > 1) return(isotopes()[, 1:2])})
         IUPAC_CIAAW <- reactive({
           if (nrow(isotopes()) < 2) {
@@ -63,8 +58,7 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
               isotopes()$Interval[1], 
               'Intervals for the relative abundances are given for the elements whose isotopic composition vary significantly in nature.',
               'Uncertainties are given  in parentheses, following the last significant digit to which they are attributed.')
-            Notes <- as.list(c(UncertStat, Notes))
-            
+            Notes <- as.list(c(UncertStat, Notes))  
             return(tags$div(
               fluidRow(
                 column(5, tableOutput(session$ns('IUPAC_Table'))),
@@ -76,10 +70,12 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         })
       }
       
+      NoInfo <- reactive(tags$div(style = 'margin-left: 20px;',
+                                  'There are no entries yet for', SelectedElem(), 'in this category.'))
       # Isotopic Composition CRMs
       {
         IsoCompCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
-          INITI_IsoComCRM_Info[which(INITI_IsoComCRM_Info$Element == SelectedElem()),
+          INITI_IsoCompCRM_Info[which(INITI_IsoCompCRM_Info$Element == SelectedElem()),
                                c("CRM.name", "Lot", "Producer", "Description")]})
         
         ListIsoCompCRM <- reactive({
@@ -92,13 +88,56 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
               IsoCompCRMList[[i]] <- actionLink(inputId = session$ns(inputId), label = label, class = "IsoCompCRM")
             }
             return(hidden(tags$div(
-              class = 'List_IsoComCRM', 
+              class = 'List_IsoCompCRM', 
               tags$ul(HTML(paste0(lapply(IsoCompCRMList, FUN = function(x) return(as.character(tags$li(x)))), collapse = '')))
             )))
-          } else {
-            return(tags$div(style = 'margin-left: 10px;',
-                            'There are no entries yet for', SelectedElem(), 'in this categorie.'))
-          }
+          } else {return(NoInfo())}
+        })
+      }
+      
+      # Calibration solution and high purity materials
+      {
+        CalibraCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
+          INITI_CalibraCRM_Info[which(INITI_CalibraCRM_Info$Element == tolower(SelectedElem())),
+                                c("CRM.name", "Lot", "Producer", "Description")]})
+        
+        ListCalibraCRM <- reactive({
+          if (nrow(CalibraCRM()) >= 1) {
+            CalibraCRM <- IsoCompCRM()
+            CalibraCRMList <- vector(mode = 'list', length = nrow(CalibraCRM))
+            for (i in 1:nrow(CalibraCRM)) {
+              inputId <- sub(" ", "_", paste(CalibraCRM$CRM.name[i], CalibraCRM$Lot[i], sep = '_'))
+              label <- paste0(CalibraCRM$Producer[i], ', ', CalibraCRM$CRM.name[i], '. Lot ', CalibraCRM$Lot[i])
+              CalibraCRMList[[i]] <- actionLink(inputId = session$ns(inputId), label = label, class = "CalibraCRM")
+            }
+            return(hidden(tags$div(
+              class = 'List_CalibraCRM', 
+              tags$ul(HTML(paste0(lapply(CalibraCRMList, FUN = function(x) return(as.character(tags$li(x)))), collapse = '')))
+            )))
+          } else {return(NoInfo())}
+        })
+      }
+      
+      # Matrix CRMs
+      {
+        MatrixCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
+          INITI_MatrixCRM_Info[which(INITI_MatrixCRM_Info$Element == SelectedElem()),
+                               c("CRM.name", "Lot", "Producer", "Description")]})
+        
+        ListMatrixCRM <- reactive({
+          if (nrow(MatrixCRM()) >= 1) {
+            MatrixCRM <- IsoCompCRM()
+            MatrixCRMList <- vector(mode = 'list', length = nrow(MatrixCRM))
+            for (i in 1:nrow(MatrixCRM)) {
+              inputId <- sub(" ", "_", paste(MatrixCRM$CRM.name[i], MatrixCRM$Lot[i], sep = '_'))
+              label <- paste0(MatrixCRM$Producer[i], ', ', MatrixCRM$CRM.name[i], '. Lot ', MatrixCRM$Lot[i])
+              MatrixCRMList[[i]] <- actionLink(inputId = session$ns(inputId), label = label, class = "MatrixCRM")
+            }
+            return(hidden(tags$div(
+              class = 'List_MatrixCRM', 
+              tags$ul(HTML(paste0(lapply(MatrixCRMList, FUN = function(x) return(as.character(tags$li(x)))), collapse = '')))
+            )))
+          } else {return(NoInfo())}
         })
       }
       
@@ -106,6 +145,8 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       output$IUPAC_CIAAW <- renderUI(IUPAC_CIAAW())
       output$IUPAC_Table   <- renderTable(IUPAC_Table())
       output$ListIsoCompCRM <- renderUI(ListIsoCompCRM())
+      output$ListCalibraCRM <- renderUI(ListCalibraCRM())
+      output$ListMatrixCRM <- renderUI(ListMatrixCRM())
     }
   )
 }

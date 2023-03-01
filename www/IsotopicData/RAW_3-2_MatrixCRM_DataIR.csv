@@ -1,0 +1,16 @@
+Element,Report.DOI,CRM.name,Isotopic.ratio,Calibration.standard,Value,Uncertainty,UncertType,k.factor
+lead,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 610,206Pb/204Pb,NIST SRM 981,17.047,0.0018,expanded,2
+lead,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 610,207Pb/204Pb,NIST SRM 981,15.509,0.001,expanded,2
+lead,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 610,208Pb/204Pb,NIST SRM 981,36.975,0.0026,expanded,2
+strontium,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 610,87Sr/86Sr,NIST SRM 987,0.709699,0.000018,expanded,2
+neodymium,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 610,143Nd/144Nd,LaJolla Nd,0.511927,0.000004,expanded,2
+lead,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 612,206Pb/204Pb,NIST SRM 981,17.094,0.0026,expanded,2
+lead,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 612,207Pb/204Pb,NIST SRM 981,15.51,0.0036,expanded,2
+lead,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 612,208Pb/204Pb,NIST SRM 981,37,0.0094,expanded,2
+strontium,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 612,87Sr/86Sr,NIST SRM 987,0.709063,0.00002,expanded,2
+neodymium,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 612,143Nd/144Nd,LaJolla Nd,0.51193,0.000004,expanded,2
+lead,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 614,206Pb/204Pb,NIST SRM 981,17.833,0.0134,expanded,2
+lead,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 614,207Pb/204Pb,NIST SRM 981,15.533,0.0066,expanded,2
+lead,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 614,208Pb/204Pb,NIST SRM 981,34.472,0.0214,expanded,2
+strontium,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 614,87Sr/86Sr,NIST SRM 987,0.708363,0.000022,expanded,2
+neodymium,https://doi.org/10.1111/j.1751-908X.2001.tb00601.x,SRM 614,143Nd/144Nd,LaJolla Nd,0.51192,0.000006,expanded,2
