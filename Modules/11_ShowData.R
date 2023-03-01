@@ -75,7 +75,7 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       # Isotopic Composition CRMs
       {
         IsoCompCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
-          INITI_IsoCompCRM_Info[which(INITI_IsoCompCRM_Info$Element == SelectedElem()),
+          INITI_IsoCompCRM_Info[which(INITI_IsoCompCRM_Info$Elements == tolower(SelectedElem())),
                                c("CRM.name", "Lot", "Producer", "Description")]})
         
         ListIsoCompCRM <- reactive({
@@ -98,7 +98,7 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       # Calibration solution and high purity materials
       {
         CalibraCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
-          INITI_CalibraCRM_Info[which(INITI_CalibraCRM_Info$Element == tolower(SelectedElem())),
+          INITI_CalibraCRM_Info[which(INITI_CalibraCRM_Info$Elements == tolower(SelectedElem())),
                                 c("CRM.name", "Lot", "Producer", "Description")]})
         
         ListCalibraCRM <- reactive({
@@ -121,7 +121,7 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       # Matrix CRMs
       {
         MatrixCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
-          INITI_MatrixCRM_Info[which(INITI_MatrixCRM_Info$Element == SelectedElem()),
+          INITI_MatrixCRM_Info[which(INITI_MatrixCRM_Info$Elements == tolower(SelectedElem())),
                                c("CRM.name", "Lot", "Producer", "Description")]})
         
         ListMatrixCRM <- reactive({
@@ -142,11 +142,11 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       }
       
       output$SelectedElem  <- renderText(SelectedElem())
-      output$IUPAC_CIAAW <- renderUI(IUPAC_CIAAW())
+      output$IUPAC_CIAAW   <- renderUI(IUPAC_CIAAW())
       output$IUPAC_Table   <- renderTable(IUPAC_Table())
       output$ListIsoCompCRM <- renderUI(ListIsoCompCRM())
       output$ListCalibraCRM <- renderUI(ListCalibraCRM())
-      output$ListMatrixCRM <- renderUI(ListMatrixCRM())
+      output$ListMatrixCRM  <- renderUI(ListMatrixCRM())
     }
   )
 }
