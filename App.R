@@ -30,6 +30,10 @@ GenericPeriodicTable <- read.csv(file = 'www/IsotopicData/RAW_GenericPeriodicTab
 ShyTheme <- shinytheme("yeti")
 windowTitle <- 'MRCs Isotopic Composition DataBase'
 
+MRCsICDB <- RMySQL::dbConnect( ## Hosted freely by https://www.freesqldatabase.com/account/ (5Mb limit)
+  RMySQL::MySQL(), user = 'sql9599488', password = 'PHsEvvEBuY', 
+  dbname = 'sql9599488', host = 'sql9.freesqldatabase.com')
+
 ui <- fluidPage(
   withMathJax(),
   useShinyjs(),

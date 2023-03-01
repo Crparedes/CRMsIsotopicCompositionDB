@@ -6,7 +6,7 @@
   text-shadow: 0 0 0.3vw currentColor;
   padding: 2%;
   transform: scale(0.9);
-  background-color: #111111;
+  background-color: #2b2b2b;
 }
 .wrapper > input {
   -webkit-appearance: none;
