@@ -1780,7 +1780,7 @@
 }
 .element input[type=radio].activate:checked ~ .square {
   z-index: 3;
-  transform: scale(4);
+  transform: scale(3);
   transition-duration: 500ms, 0ms, 200ms, 200ms, 200ms, 200ms;
   transition-delay: 0ms;
   outline: none;

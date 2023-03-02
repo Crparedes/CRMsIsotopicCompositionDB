@@ -12,8 +12,6 @@ library(tidyr)
 library(stringr)
 library(odbc)
 library(RMySQL)
-library(ggplot2) #Grammar of graphics
-library(ggfortify)
 library(writexl)
 library(rhandsontable)
 library(data.table)

@@ -8,7 +8,13 @@ headTags1 <- tags$li(
         padding-left: 40px;
       }")),
     
+    # Dialogo modal
     tags$style(HTML('.modal-dialog { width: fit-content !important; }')),
+    
+    # Tablas
+    tags$style(HTML('.tg{margin-left: 30px;}
+                     .tg .tg-field{font-weight:bold; text-align:right; vertical-align:top; padding-right: 10px}
+                     .tg .tg-value{font-weight:normal; text-align:left;vertical-align:top}')),
     
     # Links
     tags$style(HTML('

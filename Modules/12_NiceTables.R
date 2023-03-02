@@ -1,4 +1,4 @@
-ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
+NiceTablesUI <- function(id, label = "Counter", FlTy = 'Excel') {
   ns <- NS(id)
   column(
     style = 'margin-left: -20px',
@@ -25,7 +25,7 @@ ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
   )
 }
 
-ShowDataServer <- function(id, devMode, SelectedElem) {
+NiceTablesServer <- function(id, devMode, SelectedElem) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -84,13 +84,13 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         
         UIIsoCompCRM <- reactive({
           if (nrow(IsoCompCRM()) >= 1) {
-            return(hidden(tags$div(class = 'List_IsoCompCRM', tableOutput(session$ns('Table_IsoCompCRM_List')))))
+            return(hidden(tags$div(class = 'List_IsoCompCRM', tableOutput(session$ns('TableIsoCompCRM')))))
           } else {return(NoInfo())}
         })
       }
       
       
-       Table_IsoCompCRM_List <- reactive({
+       TableIsoCompCRM <- reactive({
          # Nice solution adapted from ismirsehregal https://stackoverflow.com/a/70763580/7612904
         DT <- copy(IsoCompCRM())
          setDT(DT)
@@ -99,42 +99,19 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
            , Details := as.character(
              actionLink(
                inputId = session$ns(inputId), label = 'Show details',
-               onclick = sprintf(paste0("Shiny.setInputValue(id = '", id, "-SelectedCRM', value = '", inputId, "');")))),
+               onclick = sprintf(paste0("Shiny.setInputValue(id = '", id, "-SelectedCRM', value = '", inputId, "');"), 
+                                 session$ns('SlctdCRM.name')))),
            by = inputId][, inputId := NULL]
        })
 
-       
        observeEvent(input$SelectedCRM, {
-         Data <- INITI_IsoCompCRM_Info[INITI_IsoCompCRM_Info$CRM.name == input$SelectedCRM, ]
-         Producer <- INITI_CRMproducers[INITI_CRMproducers$Producer == Data$Producer, ]
          showModal(modalDialog(
            title = HTML(paste0('Isotopic composition of ', tags$b(input$SelectedCRM))), easyClose = TRUE,
-           
-           HTML(paste0('<table class="tg""><tbody>
-                          <tr><td class="tg-field">Producer:</td>
-                              <td class="tg-value"><b>', Data$Producer, '</b></td></tr>
-                          <tr"><td class="tg-field"> </td>
-                              <td class="tg-value">
-                                <a href="', Producer$URL, '" target=_blank">', Producer$ProducerFullName, '</a></td></tr>
-                          <tr style="height: 10px !important;"><td colspan="2"></td></tr>
-                          <tr><th class="tg-field">CRM name:</th>
-                              <th class="tg-value">', Data$CRM.name, '</th></tr>
-                              <tr><th class="tg-field">Description:</th>
-                              <th class="tg-value">', Data$Description, '</th></tr>
-                              <tr><th class="tg-field">Presentation:</th>
-                              <th class="tg-value">', Data$Presentation, '</th></tr>
-                          <tr><td class="tg-field">Lot:</td>
-                              <td class="tg-value">', Data$Lot, '</td></tr>
-                          
-                          <tr><td class="tg-field">URL:</td>
-                              <td class="tg-0lax"> <a href="', Data$URL, '" target=_blank">', Data$URL, '</a></td></tr>
-                        </tbody></table>')),
-           tags$hr(),
-           tableOutput(session$ns("Table_IsoCompCRM_IndDat"))
+           tableOutput(session$ns("filtered_table"))
          ))
        })
       
-       output$Table_IsoCompCRM_IndDat <- renderTable({
+       output$filtered_table <- renderTable({
          req(input$SelectedCRM)
          DT <- copy(INITI_IsoCompCRM_DataIR[
            , c('CRM.name', 'Isotopic.ratio', 'Value', 'Uncertainty', 'UncertType', 'k.factor')])
@@ -153,7 +130,7 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       output$IUPAC_CIAAW   <- renderUI(IUPAC_CIAAW())
       output$IUPAC_Table   <- renderTable(IUPAC_Table())
       output$UIIsoCompCRM <- renderUI(UIIsoCompCRM())
-      output$Table_IsoCompCRM_List <- renderTable(Table_IsoCompCRM_List(), sanitize.text.function = function(x) {x})
+      output$TableIsoCompCRM <- renderTable(TableIsoCompCRM(), sanitize.text.function = function(x) {x})
     }
   )
 }
