@@ -16,6 +16,7 @@ library(ggplot2) #Grammar of graphics
 library(ggfortify)
 library(writexl)
 library(rhandsontable)
+library(data.table)
 library(shinycssloaders)
 
 #library(htmlwidgets)
@@ -74,7 +75,7 @@ ui <- fluidPage(
   
   tags$div(headTags1, headTags2, headTags3, style = 'display: none'),
   tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "PeriodicTable.css")),
-  includeScript("www/sendID.js")
+  includeScript("www/PeriodicTableSendID.js")
 )
 
 server <- function(input, output, session, devMode = TRUE) {
@@ -86,6 +87,7 @@ server <- function(input, output, session, devMode = TRUE) {
       )))
   observeEvent(input$brwz, browser())
   
+  observe(input$SelectedIsoCompCRM)
   SelectedElem <- reactive(input$SelectedElement)
   
   ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem)

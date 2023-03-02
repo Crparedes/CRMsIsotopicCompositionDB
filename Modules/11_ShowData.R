@@ -13,7 +13,9 @@ ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
       style = 'margin: 20px', class = 'CRMsActionLinks',
       actionLink(inputId = ns('AcLnk_IsoCompCRM'), icon = icon('atom'), style = 'display: inline;',
                  tags$b(' With certified values for isotopic composition')),
-      uiOutput(ns('ListIsoCompCRM')), tags$br(),
+      uiOutput(ns('UIIsoCompCRM')), #tableOutput(ns('TableIsoCompCRM')), 
+      tags$br(),
+      
       actionLink(inputId = ns('AcLnk_CalibraCRM'), icon = icon('flask'), style = 'display: inline;',
                  tags$b(' Calibration solutions and high purity solids')), 
       uiOutput(ns('ListCalibraCRM')), tags$br(),
@@ -70,83 +72,66 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         })
       }
       
-      NoInfo <- reactive(tags$div(style = 'margin-left: 20px;',
-                                  'There are no entries yet for', SelectedElem(), 'in this category.'))
+      NoInfo <- reactive(hidden(tags$div(class = 'List_IsoCompCRM', style = 'margin-left: 20px;',
+                                  'There are no entries yet for', tolower(SelectedElem()), 'in this category.')))
       # Isotopic Composition CRMs
       {
         IsoCompCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
-          INITI_IsoCompCRM_Info[which(INITI_IsoCompCRM_Info$Elements == tolower(SelectedElem())),
-                               c("CRM.name", "Lot", "Producer", "Description")]})
+          ShowTable <- INITI_IsoCompCRM_Info[grep(tolower(SelectedElem()), INITI_IsoCompCRM_Info$Elements, value = FALSE),
+                                             c("Producer", "CRM.name", "Lot", "Description")]
+          # ShowTable$CRM <- paste(ShowTable$CRM.name, ShowTable$Lot, sep = ', ')
+          return(ShowTable)
+        })
         
-        ListIsoCompCRM <- reactive({
+        UIIsoCompCRM <- reactive({
           if (nrow(IsoCompCRM()) >= 1) {
-            IsoCompCRM <- IsoCompCRM()
-            IsoCompCRMList <- vector(mode = 'list', length = nrow(IsoCompCRM))
-            for (i in 1:nrow(IsoCompCRM)) {
-              inputId <- sub(" ", "_", paste(IsoCompCRM$CRM.name[i], IsoCompCRM$Lot[i], sep = '_'))
-              label <- paste0(IsoCompCRM$Producer[i], ', ', IsoCompCRM$CRM.name[i], '. Lot ', IsoCompCRM$Lot[i])
-              IsoCompCRMList[[i]] <- actionLink(inputId = session$ns(inputId), label = label, class = "IsoCompCRM")
-            }
-            return(hidden(tags$div(
-              class = 'List_IsoCompCRM', 
-              tags$ul(HTML(paste0(lapply(IsoCompCRMList, FUN = function(x) return(as.character(tags$li(x)))), collapse = '')))
-            )))
+            return(hidden(tags$div(class = 'List_IsoCompCRM', tableOutput(session$ns('TableIsoCompCRM')))))
           } else {return(NoInfo())}
         })
       }
       
+      
+       TableIsoCompCRM <- reactive({
+         # Nice solution adapted from ismirsehregal https://stackoverflow.com/a/70763580/7612904
+        DT <- copy(IsoCompCRM())
+         setDT(DT)
+         
+         DT[, inputId := CRM.name][#paste0("CRM.ID_input_", seq_len(.N))][
+           , Details := as.character(
+             actionLink(
+               inputId = session$ns(inputId), label = 'Show details',
+               onclick = sprintf(paste0("Shiny.setInputValue(id = '", id, "-SelectedCRM', value = '", inputId, "');"), 
+                                 session$ns('SlctdCRM.name')))),
+           by = inputId][, inputId := NULL]
+       })
+
+       observeEvent(input$SelectedCRM, {
+         showModal(modalDialog(
+           title = HTML(paste0('Isotopic composition of ', tags$b(input$SelectedCRM))), easyClose = TRUE,
+           tableOutput(session$ns("filtered_table"))
+         ))
+       })
+      
+       output$filtered_table <- renderTable({
+         req(input$SelectedCRM)
+         DT <- copy(INITI_IsoCompCRM_DataIR[
+           , c('CRM.name', 'Isotopic.ratio', 'Value', 'Uncertainty', 'UncertType', 'k.factor')])
+         DT$Value <- as.character(DT$Value)
+         DT$Uncertainty <- as.character(DT$Uncertainty)
+         
+         setDT(DT)
+         DT[CRM.name == input$SelectedCRM, ]
+       })
+       
       # Calibration solution and high purity materials
-      {
-        CalibraCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
-          INITI_CalibraCRM_Info[which(INITI_CalibraCRM_Info$Elements == tolower(SelectedElem())),
-                                c("CRM.name", "Lot", "Producer", "Description")]})
-        
-        ListCalibraCRM <- reactive({
-          if (nrow(CalibraCRM()) >= 1) {
-            CalibraCRM <- IsoCompCRM()
-            CalibraCRMList <- vector(mode = 'list', length = nrow(CalibraCRM))
-            for (i in 1:nrow(CalibraCRM)) {
-              inputId <- sub(" ", "_", paste(CalibraCRM$CRM.name[i], CalibraCRM$Lot[i], sep = '_'))
-              label <- paste0(CalibraCRM$Producer[i], ', ', CalibraCRM$CRM.name[i], '. Lot ', CalibraCRM$Lot[i])
-              CalibraCRMList[[i]] <- actionLink(inputId = session$ns(inputId), label = label, class = "CalibraCRM")
-            }
-            return(hidden(tags$div(
-              class = 'List_CalibraCRM', 
-              tags$ul(HTML(paste0(lapply(CalibraCRMList, FUN = function(x) return(as.character(tags$li(x)))), collapse = '')))
-            )))
-          } else {return(NoInfo())}
-        })
-      }
       
       # Matrix CRMs
-      {
-        MatrixCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
-          INITI_MatrixCRM_Info[which(INITI_MatrixCRM_Info$Elements == tolower(SelectedElem())),
-                               c("CRM.name", "Lot", "Producer", "Description")]})
-        
-        ListMatrixCRM <- reactive({
-          if (nrow(MatrixCRM()) >= 1) {
-            MatrixCRM <- IsoCompCRM()
-            MatrixCRMList <- vector(mode = 'list', length = nrow(MatrixCRM))
-            for (i in 1:nrow(MatrixCRM)) {
-              inputId <- sub(" ", "_", paste(MatrixCRM$CRM.name[i], MatrixCRM$Lot[i], sep = '_'))
-              label <- paste0(MatrixCRM$Producer[i], ', ', MatrixCRM$CRM.name[i], '. Lot ', MatrixCRM$Lot[i])
-              MatrixCRMList[[i]] <- actionLink(inputId = session$ns(inputId), label = label, class = "MatrixCRM")
-            }
-            return(hidden(tags$div(
-              class = 'List_MatrixCRM', 
-              tags$ul(HTML(paste0(lapply(MatrixCRMList, FUN = function(x) return(as.character(tags$li(x)))), collapse = '')))
-            )))
-          } else {return(NoInfo())}
-        })
-      }
       
       output$SelectedElem  <- renderText(SelectedElem())
       output$IUPAC_CIAAW   <- renderUI(IUPAC_CIAAW())
       output$IUPAC_Table   <- renderTable(IUPAC_Table())
-      output$ListIsoCompCRM <- renderUI(ListIsoCompCRM())
-      output$ListCalibraCRM <- renderUI(ListCalibraCRM())
-      output$ListMatrixCRM  <- renderUI(ListMatrixCRM())
+      output$UIIsoCompCRM <- renderUI(UIIsoCompCRM())
+      output$TableIsoCompCRM <- renderTable(TableIsoCompCRM(), sanitize.text.function = function(x) {x})
     }
   )
 }

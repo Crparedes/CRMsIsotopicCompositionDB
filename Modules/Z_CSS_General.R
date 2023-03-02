@@ -7,6 +7,9 @@ headTags1 <- tags$li(
       .radio-inline, .checkbox-inline {
         padding-left: 40px;
       }")),
+    
+    tags$style(HTML('.modal-dialog { width: fit-content !important; }')),
+    
     # Links
     tags$style(HTML('
       a {
