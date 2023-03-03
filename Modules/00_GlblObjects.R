@@ -24,3 +24,8 @@ Disclaimer <- h6(
   'This tool is made available freely in the hope that it will be useful, but is provided WITHOUT ANY WARRANTY, 
   to the extent permitted by law; without even the implied warranty of MERCHANTABILITY or
   FITNESS FOR A PARTICULAR PURPOSE.')
+
+NoIsotopesMessage <- tags$div(
+  h5('Selected element is monoisotopic or has no stable isotopes.', tags$br(),
+     'No data on isotopic composition was found.', tags$br()),
+  h4(tags$b('Please select another element.')))

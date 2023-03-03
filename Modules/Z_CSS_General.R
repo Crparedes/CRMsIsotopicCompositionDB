@@ -11,6 +11,11 @@ headTags1 <- tags$li(
     # Dialogo modal
     tags$style(HTML('.modal-dialog { width: fit-content !important; }')),
     
+    # Switchinput
+    tags$style(HTML('.material-switch>.label-primary {
+      background-color: #000000;
+    }')),
+    
     # Tablas
     tags$style(HTML('.tg{margin-left: 30px;}
                      .tg .tg-field{font-weight:bold; text-align:right; vertical-align:top; padding-right: 10px}

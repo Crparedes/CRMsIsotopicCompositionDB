@@ -17,10 +17,10 @@ ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
       
       actionLink(inputId = ns('AcLnk_CalibraCRM'), icon = icon('flask'), style = 'display: inline;',
                  tags$b(' Calibration solutions and high purity solids')), 
-      uiOutput(ns('ListCalibraCRM')), tags$br(),
+      tags$br(),
       actionLink(inputId = ns('AcLnk_MatrixCRM'), icon = icon('carrot'), style = 'display: inline;',
                  tags$b(' Matrix CRMs')), 
-      uiOutput(ns('ListMatrixCRM'))#, tags$hr()
+      ShowAvailCRMsUI(ns("MatrixCRM")) # First UI attempt to call a module from within a module
     ))
   )
 }
@@ -32,27 +32,23 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       output$brwz <- renderUI(if(devMode()) return(actionButton(session$ns('brwz'), label = tags$b('Pause module'))))
       observeEvent(input$brwz, browser())
       
+      observe(toggleElement(condition = nrow(isotopes()) > 1, selector = 'div.CRMsActionLinks',
+                            anim = TRUE, animType = 'fade', time = 1))
+      observeEvent(input$AcLnk_IsoCompCRM, toggle(selector = 'div.List_IsoCompCRM', anim = TRUE, animType = 'fade', time = 0.4))
+      observeEvent(input$AcLnk_CalibraCRM, toggle(selector = 'div.List_CalibraCRM', anim = TRUE, animType = 'fade', time = 0.4))
+      observeEvent(input$AcLnk_MatrixCRM, toggle(selector = 'div.List_MatrixCRM', anim = TRUE, animType = 'fade', time = 0.4))
+      
       # CIAAW Information
       {
-        isotopes <- eventReactive(
-          SelectedElem(), ignoreInit = TRUE, {
-            CIAAW_NatIsotAbunTable[
-              which(CIAAW_NatIsotAbunTable$Element == tolower(SelectedElem())), 
-              c("Isotope", "Relative.abundance", "Notes", "Interval")]
-        })
+        isotopes <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
+          CIAAW_NatIsotAbunTable[
+            which(CIAAW_NatIsotAbunTable$Element == tolower(SelectedElem())), 
+            c("Isotope", "Relative.abundance", "Notes", "Interval")]})
   
-        observe(toggleElement(
-          condition = nrow(isotopes()) > 1, selector = 'div.CRMsActionLinks', anim = TRUE, animType = 'fade', time = 1))
-        observeEvent(input$AcLnk_IsoCompCRM, toggle(selector = 'div.List_IsoCompCRM', anim = TRUE, animType = 'fade', time = 0.4))
-        observeEvent(input$AcLnk_CalibraCRM, toggle(selector = 'div.List_CalibraCRM', anim = TRUE, animType = 'fade', time = 0.4))
-        observeEvent(input$AcLnk_MatrixCRM, toggle(selector = 'div.List_MatrixCRM', anim = TRUE, animType = 'fade', time = 0.4))
-
         IUPAC_Table <- reactive({if (nrow(isotopes()) > 1) return(isotopes()[, 1:2])})
         IUPAC_CIAAW <- reactive({
           if (nrow(isotopes()) < 2) {
-            return(tags$h5('Selected element is monoisotopic or has no stable isotopes.
-                           No data on isotopic composition was found.', tags$br(),
-                           tags$b('Please select another element')))
+            return(NoIsotopesMessage)
           } else {
             Notes <- CIAAW_NatIsotAbunFtnts[CIAAW_NatIsotAbunFtnts$Note == strsplit(isotopes()$Notes[1], '')[[1]], 2]
             UncertStat <- ifelse(
@@ -71,83 +67,63 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         })
       }
       
-      NoInfo <- reactive(hidden(tags$div(class = 'List_IsoCompCRM', style = 'margin-left: 20px;',
-                                  'There are no entries yet for', tolower(SelectedElem()), 'in this category.')))
+      NoInfo <- reactive(paste0('There are no entries yet for', tolower(SelectedElem()), 'in this category.'))
       # Isotopic Composition CRMs
       {
         IsoCompCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
           ShowTable <- INITI_IsoCompCRM_Info[grep(tolower(SelectedElem()), INITI_IsoCompCRM_Info$Elements, value = FALSE),
                                              c("Producer", "CRM.name", "Lot", "Description")]
-          # ShowTable$CRM <- paste(ShowTable$CRM.name, ShowTable$Lot, sep = ', ')
           return(ShowTable)
         })
         
         UIIsoCompCRM <- reactive({
           if (nrow(IsoCompCRM()) >= 1) {
-            return(hidden(tags$div(class = 'List_IsoCompCRM', tableOutput(session$ns('Table_IsoCompCRM_List')))))
-          } else {return(NoInfo())}
+            ElmntToPrnt <- tableOutput(session$ns('Table_IsoCompCRM_List'))
+          } else {ElmntToPrnt <- NoInfo()}
+          return(hidden(tags$div(class = 'List_IsoCompCRM', style = 'margin-left: 8px;', ElmntToPrnt)))
+        })
+        
+        Table_IsoCompCRM_List <- reactive({# Adapted from https://stackoverflow.com/a/70763580/7612904
+          DT <- copy(IsoCompCRM())
+          setDT(DT)
+          DT[, inputId := CRM.name][
+            , Details := as.character(
+              actionLink(
+                inputId = session$ns(inputId), label = 'Show details',
+                onclick = sprintf(paste0("Shiny.setInputValue(id = '", id, "-SelectedCRM', value = '", inputId, "');")))),
+            by = inputId][, inputId := NULL]
+        })
+        
+        observeEvent(input$SelectedCRM, {
+          Data <- INITI_IsoCompCRM_Info[INITI_IsoCompCRM_Info$CRM.name == input$SelectedCRM, ]
+          Producer <- INITI_CRMproducers[INITI_CRMproducers$Producer == Data$Producer, ]
+          showModal(modalDialog(
+            title = HTML(paste0('Isotopic composition of ', tags$b(input$SelectedCRM))), easyClose = TRUE,
+            crmSummary(Producer = Producer, Data = Data), tags$hr(), tableOutput(session$ns("Table_IsoCompCRM_IndDat"))))
+        })
+      
+        output$Table_IsoCompCRM_IndDat <- renderTable({
+          req(input$SelectedCRM)
+          DT <- copy(INITI_IsoCompCRM_DataIR[
+            INITI_IsoCompCRM_DataIR$CRM.name == input$SelectedCRM, 
+            c('Isotopic.ratio', 'Value', 'Uncertainty', 'UncertType', 'k.factor')])
+          DT$Value <- as.character(DT$Value)
+          DT$Uncertainty <- as.character(DT$Uncertainty)
+          return(DT)
         })
       }
-      
-      
-       Table_IsoCompCRM_List <- reactive({
-         # Nice solution adapted from ismirsehregal https://stackoverflow.com/a/70763580/7612904
-        DT <- copy(IsoCompCRM())
-         setDT(DT)
-         
-         DT[, inputId := CRM.name][#paste0("CRM.ID_input_", seq_len(.N))][
-           , Details := as.character(
-             actionLink(
-               inputId = session$ns(inputId), label = 'Show details',
-               onclick = sprintf(paste0("Shiny.setInputValue(id = '", id, "-SelectedCRM', value = '", inputId, "');")))),
-           by = inputId][, inputId := NULL]
-       })
-
-       
-       observeEvent(input$SelectedCRM, {
-         Data <- INITI_IsoCompCRM_Info[INITI_IsoCompCRM_Info$CRM.name == input$SelectedCRM, ]
-         Producer <- INITI_CRMproducers[INITI_CRMproducers$Producer == Data$Producer, ]
-         showModal(modalDialog(
-           title = HTML(paste0('Isotopic composition of ', tags$b(input$SelectedCRM))), easyClose = TRUE,
-           
-           HTML(paste0('<table class="tg""><tbody>
-                          <tr><td class="tg-field">Producer:</td>
-                              <td class="tg-value"><b>', Data$Producer, '</b></td></tr>
-                          <tr"><td class="tg-field"> </td>
-                              <td class="tg-value">
-                                <a href="', Producer$URL, '" target=_blank">', Producer$ProducerFullName, '</a></td></tr>
-                          <tr style="height: 10px !important;"><td colspan="2"></td></tr>
-                          <tr><th class="tg-field">CRM name:</th>
-                              <th class="tg-value">', Data$CRM.name, '</th></tr>
-                              <tr><th class="tg-field">Description:</th>
-                              <th class="tg-value">', Data$Description, '</th></tr>
-                              <tr><th class="tg-field">Presentation:</th>
-                              <th class="tg-value">', Data$Presentation, '</th></tr>
-                          <tr><td class="tg-field">Lot:</td>
-                              <td class="tg-value">', Data$Lot, '</td></tr>
-                          
-                          <tr><td class="tg-field">URL:</td>
-                              <td class="tg-0lax"> <a href="', Data$URL, '" target=_blank">', Data$URL, '</a></td></tr>
-                        </tbody></table>')),
-           tags$hr(),
-           tableOutput(session$ns("Table_IsoCompCRM_IndDat"))
-         ))
-       })
-      
-       output$Table_IsoCompCRM_IndDat <- renderTable({
-         req(input$SelectedCRM)
-         DT <- copy(INITI_IsoCompCRM_DataIR[
-           , c('CRM.name', 'Isotopic.ratio', 'Value', 'Uncertainty', 'UncertType', 'k.factor')])
-         DT$Value <- as.character(DT$Value)
-         DT$Uncertainty <- as.character(DT$Uncertainty)
-         
-         setDT(DT)
-         DT[CRM.name == input$SelectedCRM, ]
-       })
        
       # Calibration solution and high purity materials
       
       # Matrix CRMs
+      observe({
+        req(SelectedElem())
+        ShowAvailCRMsServer(
+          id = 'MatrixCRM', devMode = devMode, SelectedElem = SelectedElem, gnrlClss = 'List_MatrixCRM',
+          CRMsInfoTable = INITI_MatrixCRM_Info[grep(tolower(SelectedElem()), INITI_MatrixCRM_Info$Elements, value = FALSE), ], 
+          CRMsDataTable = INITI_MatrixCRM_DataIR[INITI_MatrixCRM_DataIR$Element == tolower(SelectedElem()), ])
+      })
+      
       
       output$SelectedElem  <- renderText(SelectedElem())
       output$IUPAC_CIAAW   <- renderUI(IUPAC_CIAAW())
