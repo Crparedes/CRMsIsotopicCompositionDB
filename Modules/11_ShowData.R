@@ -13,14 +13,15 @@ ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
       style = 'margin: 20px', class = 'CRMsActionLinks',
       actionLink(inputId = ns('AcLnk_IsoCompCRM'), icon = icon('atom'), style = 'display: inline;',
                  tags$b(' With certified values for isotopic composition')),
-      uiOutput(ns('UIIsoCompCRM')), tags$br(),
+      ShowAvailCRMsUI(ns("IsoCompCRM")),
       
       actionLink(inputId = ns('AcLnk_CalibraCRM'), icon = icon('flask'), style = 'display: inline;',
                  tags$b(' Calibration solutions and high purity solids')), 
-      tags$br(),
+      ShowAvailCRMsUI(ns("CalibraCRM")),
+      
       actionLink(inputId = ns('AcLnk_MatrixCRM'), icon = icon('carrot'), style = 'display: inline;',
                  tags$b(' Matrix CRMs')), 
-      ShowAvailCRMsUI(ns("MatrixCRM")) # First UI attempt to call a module from within a module
+      ShowAvailCRMsUI(ns("MatrixCRM"))
     ))
   )
 }
@@ -67,69 +68,42 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         })
       }
       
-      NoInfo <- reactive(paste0('There are no entries yet for', tolower(SelectedElem()), 'in this category.'))
       # Isotopic Composition CRMs
-      {
-        IsoCompCRM <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
-          ShowTable <- INITI_IsoCompCRM_Info[grep(tolower(SelectedElem()), INITI_IsoCompCRM_Info$Elements, value = FALSE),
-                                             c("Producer", "CRM.name", "Lot", "Description")]
-          return(ShowTable)
-        })
-        
-        UIIsoCompCRM <- reactive({
-          if (nrow(IsoCompCRM()) >= 1) {
-            ElmntToPrnt <- tableOutput(session$ns('Table_IsoCompCRM_List'))
-          } else {ElmntToPrnt <- NoInfo()}
-          return(hidden(tags$div(class = 'List_IsoCompCRM', style = 'margin-left: 8px;', ElmntToPrnt)))
-        })
-        
-        Table_IsoCompCRM_List <- reactive({# Adapted from https://stackoverflow.com/a/70763580/7612904
-          DT <- copy(IsoCompCRM())
-          setDT(DT)
-          DT[, inputId := CRM.name][
-            , Details := as.character(
-              actionLink(
-                inputId = session$ns(inputId), label = 'Show details',
-                onclick = sprintf(paste0("Shiny.setInputValue(id = '", id, "-SelectedCRM', value = '", inputId, "');")))),
-            by = inputId][, inputId := NULL]
-        })
-        
-        observeEvent(input$SelectedCRM, {
-          Data <- INITI_IsoCompCRM_Info[INITI_IsoCompCRM_Info$CRM.name == input$SelectedCRM, ]
-          Producer <- INITI_CRMproducers[INITI_CRMproducers$Producer == Data$Producer, ]
-          showModal(modalDialog(
-            title = HTML(paste0('Isotopic composition of ', tags$b(input$SelectedCRM))), easyClose = TRUE,
-            crmSummary(Producer = Producer, Data = Data), tags$hr(), tableOutput(session$ns("Table_IsoCompCRM_IndDat"))))
-        })
-      
-        output$Table_IsoCompCRM_IndDat <- renderTable({
-          req(input$SelectedCRM)
-          DT <- copy(INITI_IsoCompCRM_DataIR[
-            INITI_IsoCompCRM_DataIR$CRM.name == input$SelectedCRM, 
-            c('Isotopic.ratio', 'Value', 'Uncertainty', 'UncertType', 'k.factor')])
-          DT$Value <- as.character(DT$Value)
-          DT$Uncertainty <- as.character(DT$Uncertainty)
-          return(DT)
-        })
-      }
+      observe({
+        req(SelectedElem())
+        ShowAvailCRMsServer(
+          id = 'IsoCompCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
+          gnrlClss = 'List_IsoCompCRM', key = 'Certified',
+          CRMproducers = INITI_CRMproducers,
+          CRMsInfoTable = INITI_IsoCompCRM_Info[grep(tolower(SelectedElem()), INITI_IsoCompCRM_Info$Elements, value = FALSE), ], 
+          CRMsDataTable = INITI_IsoCompCRM_DataIR[INITI_IsoCompCRM_DataIR$Element == tolower(SelectedElem()), ])
+      })
        
       # Calibration solution and high purity materials
+      observe({
+        req(SelectedElem())
+        ShowAvailCRMsServer(
+          id = 'CalibraCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
+          gnrlClss = 'List_CalibraCRM', key = 'Reported',
+          CRMproducers = INITI_CRMproducers, MeasuReports = INITI_MeasuReports, 
+          CRMsInfoTable = INITI_CalibraCRM_Info[grep(tolower(SelectedElem()), INITI_CalibraCRM_Info$Elements, value = FALSE), ], 
+          CRMsDataTable = INITI_CalibraCRM_DataIR[INITI_CalibraCRM_DataIR$Element == tolower(SelectedElem()), ])
+      })
       
       # Matrix CRMs
       observe({
         req(SelectedElem())
         ShowAvailCRMsServer(
-          id = 'MatrixCRM', devMode = devMode, SelectedElem = SelectedElem, gnrlClss = 'List_MatrixCRM',
+          id = 'MatrixCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
+          gnrlClss = 'List_MatrixCRM', key = 'Reported',
+          CRMproducers = INITI_CRMproducers, MeasuReports = INITI_MeasuReports,
           CRMsInfoTable = INITI_MatrixCRM_Info[grep(tolower(SelectedElem()), INITI_MatrixCRM_Info$Elements, value = FALSE), ], 
           CRMsDataTable = INITI_MatrixCRM_DataIR[INITI_MatrixCRM_DataIR$Element == tolower(SelectedElem()), ])
       })
       
-      
       output$SelectedElem  <- renderText(SelectedElem())
       output$IUPAC_CIAAW   <- renderUI(IUPAC_CIAAW())
       output$IUPAC_Table   <- renderTable(IUPAC_Table())
-      output$UIIsoCompCRM <- renderUI(UIIsoCompCRM())
-      output$Table_IsoCompCRM_List <- renderTable(Table_IsoCompCRM_List(), sanitize.text.function = function(x) {x})
     }
   )
 }
