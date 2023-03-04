@@ -27,5 +27,4 @@ Disclaimer <- h6(
 
 NoIsotopesMessage <- tags$div(
   h5('Selected element is monoisotopic or has no stable isotopes.', tags$br(),
-     'No data on isotopic composition was found.', tags$br()),
-  h4(tags$b('Please select another element.')))
+     'No data on isotopic composition was found.', tags$br(), tags$b('Please select another element.')))

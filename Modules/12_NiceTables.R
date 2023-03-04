@@ -16,7 +16,7 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, Me
       UI_CRM_List <- reactive({
         req(SelectedElem)
         if (nrow(CRMsInfoTable) >= 1) {
-          ElmntToPrnt <- tableOutput(session$ns('Table_CRM_List'))
+          ElmntToPrnt <- DT::dataTableOutput(session$ns('Table_CRM_List'))
         } else {
           ElmntToPrnt <- NoInfo()
         }
@@ -45,6 +45,7 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, Me
             crmSummary(Producer = Producer, Data = IndivData, key = key),
             tags$hr(),
             tableOutput(session$ns("Table_CRM_IndivData")),
+            tags$hr(),
             if (key == 'Reported') StudySummary(MeasuReports[MeasuReports$Report.DOI == IndivData$Report.DOI, ])))
         }
       })
@@ -67,7 +68,7 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, Me
       })
       
       output$UI_CRM_List <- renderUI(UI_CRM_List())
-      output$Table_CRM_List <- renderTable(Table_CRM_List(), sanitize.text.function = function(x) {x})
+      output$Table_CRM_List <- DT::renderDataTable(Table_CRM_List(), escape = FALSE)#sanitize.text.function = function(x) {x})
     }
   )
 }

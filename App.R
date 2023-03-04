@@ -15,6 +15,7 @@ library(RMySQL)
 library(writexl)
 library(rhandsontable)
 library(data.table)
+library(DT)
 library(shinycssloaders)
 
 #library(htmlwidgets)
