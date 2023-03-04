@@ -8,7 +8,7 @@ ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
     h4(style = 'margin-left: 10px', tags$b('CIAAW data on natural isotopic composition')),
     div(style = 'margin: 20px', uiOutput(ns('IUPAC_CIAAW'))),
     niceSeparator(),
-    h4(style = 'margin-left: 10px', tags$b('Certified Reference Materials')),
+    h4(style = 'margin-left: 10px', tags$b('Certified reference materials in the data base')),
     (div(
       style = 'margin: 20px', class = 'CRMsActionLinks',
       actionLink(inputId = ns('AcLnk_IsoCompCRM'), icon = icon('atom'), style = 'display: inline;',
@@ -73,7 +73,7 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         req(SelectedElem())
         ShowAvailCRMsServer(
           id = 'IsoCompCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
-          gnrlClss = 'List_IsoCompCRM', key = 'Certified',
+          gnrlClss = 'List_IsoCompCRM', key = 'Certified', Actionate = reactive(input$AcLnk_IsoCompCRM),
           CRMproducers = INITI_CRMproducers,
           CRMsInfoTable = INITI_IsoCompCRM_Info[grep(tolower(SelectedElem()), INITI_IsoCompCRM_Info$Elements, value = FALSE), ], 
           CRMsDataTable = INITI_IsoCompCRM_DataIR[INITI_IsoCompCRM_DataIR$Element == tolower(SelectedElem()), ])
@@ -84,7 +84,7 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         req(SelectedElem())
         ShowAvailCRMsServer(
           id = 'CalibraCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
-          gnrlClss = 'List_CalibraCRM', key = 'Reported',
+          gnrlClss = 'List_CalibraCRM', key = 'Reported', Actionate = reactive(input$AcLnk_CalibraCRM),
           CRMproducers = INITI_CRMproducers, MeasuReports = INITI_MeasuReports, 
           CRMsInfoTable = INITI_CalibraCRM_Info[grep(tolower(SelectedElem()), INITI_CalibraCRM_Info$Elements, value = FALSE), ], 
           CRMsDataTable = INITI_CalibraCRM_DataIR[INITI_CalibraCRM_DataIR$Element == tolower(SelectedElem()), ])
@@ -95,7 +95,7 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         req(SelectedElem())
         ShowAvailCRMsServer(
           id = 'MatrixCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
-          gnrlClss = 'List_MatrixCRM', key = 'Reported',
+          gnrlClss = 'List_MatrixCRM', key = 'Reported', Actionate = reactive(input$AcLnk_MatrixCRM),
           CRMproducers = INITI_CRMproducers, MeasuReports = INITI_MeasuReports,
           CRMsInfoTable = INITI_MatrixCRM_Info[grep(tolower(SelectedElem()), INITI_MatrixCRM_Info$Elements, value = FALSE), ], 
           CRMsDataTable = INITI_MatrixCRM_DataIR[INITI_MatrixCRM_DataIR$Element == tolower(SelectedElem()), ])

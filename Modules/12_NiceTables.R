@@ -3,7 +3,7 @@ ShowAvailCRMsUI <- function(id) {
   tags$div(uiOutput(ns('brwz')), uiOutput(ns('UI_CRM_List')), tags$br())
 }
 
-ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, MeasuReports = NULL,
+ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, MeasuReports = NULL, Actionate,
                                 CRMsInfoTable, CRMsDataTable, gnrlClss, key) {
   moduleServer(
     id,
@@ -26,24 +26,27 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, Me
       Table_CRM_List <- reactive({# From https://stackoverflow.com/a/70763580/7612904
         DT <- copy(CRMsInfoTable[, c("Producer", "CRM.name", "Lot", "Description")])
         setDT(DT)
+        inputName <- paste0(id2, '-', id, '-SelectedCRM')
         DT[, inputId := CRM.name][
           , Details := as.character(
             actionLink(
-              inputId = session$ns(inputId), label = 'Show details',
-              onclick = sprintf(paste0("Shiny.setInputValue(id = '", id2, '-', id, "-SelectedCRM', value = '", inputId, "');")))),
+              inputId = session$ns(inputId), label = 'Show details', class = 'CRMOption',
+              onclick = sprintf(paste0("Shiny.setInputValue(id = '", inputName, "', value = '", inputId, "');")))),
           by = inputId][, inputId := NULL]
       })
       
-      observeEvent(input$SelectedCRM, {
+      observeEvent(input$SelectedCRM, ignoreInit = TRUE, {
         IndivData <- CRMsInfoTable[CRMsInfoTable$CRM.name == input$SelectedCRM, ]
         Producer  <- CRMproducers[CRMproducers$Producer == IndivData$Producer, ]
         
-        showModal(modalDialog(
-          title = HTML(paste0(key, ' isotopic composition of ', tags$b(input$SelectedCRM))), easyClose = TRUE,
-          crmSummary(Producer = Producer, Data = IndivData, key = key),
-          tags$hr(),
-          tableOutput(session$ns("Table_CRM_IndivData")),
-          if (key == 'Reported') StudySummary(MeasuReports[MeasuReports$Report.DOI == IndivData$Report.DOI, ])))
+        if (TRUE) {
+          showModal(modalDialog(
+            title = HTML(paste0(key, ' isotopic composition of ', tags$b(input$SelectedCRM))), easyClose = TRUE,
+            crmSummary(Producer = Producer, Data = IndivData, key = key),
+            tags$hr(),
+            tableOutput(session$ns("Table_CRM_IndivData")),
+            if (key == 'Reported') StudySummary(MeasuReports[MeasuReports$Report.DOI == IndivData$Report.DOI, ])))
+        }
       })
       
       output$Table_CRM_IndivData <- renderTable({
