@@ -16,11 +16,11 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, Me
       UI_CRM_List <- reactive({
         req(SelectedElem)
         if (nrow(CRMsInfoTable) >= 1) {
-          ElmntToPrnt <- DT::dataTableOutput(session$ns('Table_CRM_List'))
+          ElmntToPrnt <- div(tags$hr(), DT::dataTableOutput(session$ns('Table_CRM_List')), tags$hr())
         } else {
           ElmntToPrnt <- NoInfo()
         }
-        return(hidden(tags$div(class = gnrlClss, style = 'margin-left: 8px;', ElmntToPrnt)))
+        return(hidden(tags$div(class = gnrlClss, style = 'margin-left: 10px;', ElmntToPrnt)))
       })
       
       Table_CRM_List <- reactive({# From https://stackoverflow.com/a/70763580/7612904
