@@ -2,35 +2,44 @@ UploadProduStudyUI <- function(id, key) {
   ns <- NS(id)
   tags$div(
     uiOutput(ns('brwz')),
-    uiOutput(ns('selectProducer')),
-    conditionalPanel("input.SelectedProducer == 'Other'", ns = ns, uiOutput(ns('NewProdInfo'))),
+    uiOutput(ns('selectKreator')),
+    conditionalPanel("input.selectedKreator == 'Other'", ns = ns, uiOutput(ns('NewProdInfo'))),
     tags$br())
 }
 
-UploadProduStudyServer <- function(id, id2, devMode, key, TableProducers) {
+UploadProduStudyServer <- function(id, id2, devMode, key, TableKreators) {
   moduleServer(
     id,
     function(input, output, session) {
       output$brwz <- renderUI(if(devMode()) return(actionButton(session$ns('brwz'), label = tags$b('Pause submodule'))))
       observeEvent(input$brwz, browser())
       
+      item <- reactive(ifelse(
+        key == 'Producer', 'CRM producer', 'Measurement report'))
+      choiceValues <- reactive(ifelse(
+        key == 'Producer', return(c(TableKreators$Producer, 'Other')), return(c('Other', TableKreators$Report.DOI))))
+      choiceNames <- reactive(ifelse(
+        key == 'Producer', 
+        return(c(paste0(TableKreators$Producer, ', ', TableKreators$ProducerFullName), 'Other...')),
+        return(c('New report...', 
+                 paste0(TableKreators$Authors, ', ', TableKreators$Year, ', ', 
+                        TableKreators$Journal, ' No, ', TableKreators$Issue, '. pp ', TableKreators$Pages)))))
+      
        {
-         restartProdList <- reactiveVal(0)
-         selectProducer <- eventReactive(restartProdList(), {
+         restartKreaList <- reactiveVal(0)
+         selectKreator <- eventReactive(restartKreaList(), {
            selectizeInput(
-             inputId = session$ns('SelectedProducer'), label = tags$lib('Select the CRM producer:'), width = '50%',
-             choices = as.list(
-               setNames(c(TableProducers$Producer, 'Other'),
-                        c(paste0(TableProducers$Producer, ', ', TableProducers$ProducerFullName), 'Other...'))),
+             inputId = session$ns('selectedKreator'), label = tags$lib(paste0('Select the ', item(), ':')), width = '50%',
+             choices = as.list(setNames(choiceValues(), choiceNames())),
              options = list(placeholder = 'Write or select an option below', onInitialize = I('function() { this.setValue(""); }'))
            )
          })
-         output$selectProducer <- renderUI(selectProducer())
+         output$selectKreator <- renderUI(selectKreator())
          
-        fieldsCrmProd <- colnames(TableProducers)
+        fieldsCrmProd <- colnames(TableKreators)
         observe({
-          req(input$SelectedProducer)
-          if (input$SelectedProducer == 'Other') {
+          req(input$selectedKreator)
+          if (input$selectedKreator == 'Other') {
             countries <- countrycode::codelist$country.name.en
             # countrycode('Colombia','country.name', 'iso2c')
             showModal(modalDialog(
@@ -46,34 +55,34 @@ UploadProduStudyServer <- function(id, id2, devMode, key, TableProducers) {
                                options = list(placeholder = 'Write or select an option below:',
                                               onInitialize = I('function() { this.setValue(""); }'))),
                 textInput(session$ns(fieldsCrmProd[6]), label = ReqField('Website:'), placeholder = 'A valid URL', width = '180px'),
-                tags$br(), uiOutput(session$ns('BadNewProducer'))
+                tags$br(), uiOutput(session$ns('BadNewKreator'))
               ),
               splitLayout(
-                actionButton(session$ns('createNewProducer'), label = tags$b('Record new CRM producer')),
-                actionButton(session$ns('cancelNewProducer'), label = tags$b('Cancel')))
+                actionButton(session$ns('createNewKreator'), label = tags$b('Record new CRM producer')),
+                actionButton(session$ns('cancelNewKreator'), label = tags$b('Cancel')))
             ))
           }
         })
 
-        observeEvent(input$createNewProducer, {
+        observeEvent(input$createNewKreator, {
           if (are.null.empty(c(input$Producer, input$ProducerFullName, input$Country, input$URL))) {
-            output$BadNewProducer <- renderUI(tags$b(style = 'color: red;', 'Please fill in all required fields.'))
+            output$BadNewKreator <- renderUI(tags$b(style = 'color: red;', 'Please fill in all required fields.'))
           } else {
             removeModal()
             output$NewProdInfo <- renderUI(tags$div(
-              tags$b('New CRM producer: '), input$Producer, ', ',
+              tags$b('New CRM producer in the database: '), input$Producer, ', ',
               tags$a(input$ProducerFullName, href = input$URL, target = '_blank')))
           }
         })
 
 
-        observeEvent(input$cancelNewProducer, {
+        observeEvent(input$cancelNewKreator, {
           removeModal()
-          restartProdList(restartProdList() + 1)# runjs("Shiny.setInputValue('UploadData-SelectedProducer', '');")
+          restartKreaList(restartKreaList() + 1)# runjs("Shiny.setInputValue('UploadData-selectedKreator', '');")
         })
       }
 
-      return(reactive(input$SelectedProducer))
+      return(reactive(input$selectedKreator))
       
       
       

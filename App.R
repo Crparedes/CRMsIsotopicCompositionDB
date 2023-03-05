@@ -90,7 +90,7 @@ server <- function(input, output, session, devMode = TRUE) {
   
   ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem)
   
-  UploadDataServer('UploadData', devMode = devMode, TableProducers = INITI_CRMproducers)
+  UploadDataServer('UploadData', devMode = devMode, TableProducers = INITI_CRMproducers, TableStudies = INITI_MeasuReports)
   
 }
 

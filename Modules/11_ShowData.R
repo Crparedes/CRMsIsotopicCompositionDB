@@ -113,7 +113,9 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       
       NoElement <- eventReactive(
         c(input$AcLnk_MatrixCRM, input$AcLnk_CalibraCRM, input$AcLnk_IsoCompCRM, SelectedElem()), ignoreInit = TRUE, {
-        if (is.null(SelectedElem())) return(tags$b("Please select an element from the periodic table.", tags$hr())) else return()})
+        if (is.null(SelectedElem())) {
+          return(tags$b(style = 'color: red;', "Please select an element from the periodic table.", tags$hr()))
+        } else {return()}})
       
       output$NoElement     <- renderUI(NoElement())
       output$SelectedElem  <- renderText(SelectedElem())
