@@ -82,12 +82,10 @@ server <- function(input, output, session, devMode = TRUE) {
   devMode <- reactive(input$Desarrollador)
   output$brwz <- renderUI(
     if(devMode()) return(tags$span(
-      tags$b('These buttons will not work if running in a server.'), tags$br(),
-      actionButton(inputId = 'brwz', label = tags$b('Pause App'))
-      )))
+      tags$b('These buttons will not work if running in a server.'), 
+      actionButton(inputId = 'brwz', label = tags$b('Pause App')))))
   observeEvent(input$brwz, browser())
   
-  observe(input$SelectedIsoCompCRM)
   SelectedElem <- reactive(input$SelectedElement)
   
   ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem)
