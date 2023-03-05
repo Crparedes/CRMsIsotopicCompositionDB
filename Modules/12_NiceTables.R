@@ -31,7 +31,8 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, Me
           , Details := as.character(
             actionLink(
               inputId = session$ns(inputId), label = 'Show details', class = 'CRMOption',
-              onclick = sprintf(paste0("Shiny.setInputValue(id = '", inputName, "', value = '", inputId, "');")))),
+              onclick = sprintf(paste0("Shiny.setInputValue(\"", session$ns("SelectedCRM"), "\", null, {priority: \"event\"});",
+                                       "Shiny.setInputValue(id = '", inputName, "', value = '", inputId, "');")))),
           by = inputId][, inputId := NULL]
       })
       
