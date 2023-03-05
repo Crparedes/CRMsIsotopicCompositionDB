@@ -11,6 +11,11 @@ headTags1 <- tags$li(
     # Dialogo modal
     tags$style(HTML('.modal-dialog { width: fit-content !important; }')),
     
+    # labels
+    tags$style(HTML('label, .control-label, .help-block, .checkbox, .radio {
+        font-size: 1em;
+        font-weight: normal;
+    }')),
     # Switchinput
     tags$style(HTML('.material-switch>.label-primary {
       background-color: #000000;
@@ -48,9 +53,9 @@ headTags1 <- tags$li(
     # other inputs
     tags$style(HTML("
       .form-control {
-        height: 20px;
+        height: 28px;
         padding: 10px 1px 10px 10px;
-        font-size: 13px;
+        font-size: 15px;
         line-height: 1.42857143;
         color: #2c3e50;
         background-color: #ffffff;
@@ -58,7 +63,7 @@ headTags1 <- tags$li(
       .btn-file {
         height: 22px;
         padding: 3px 3px;
-        font-size: 12px;
+        font-size: 15px;
         background-color:black; 
       }
     ")),
@@ -78,15 +83,15 @@ headTags1 <- tags$li(
     # Cosas en una sola linea
     tags$style(
       type = "text/css", 
-      "#inline label{ display: table-cell; text-align: right; vertical-align: middle;} 
+      "#inline label{ display: table-cell; text-align: right; vertical-align: middle; padding-top:6px} 
       #inline .form-group {display: table-row; width:100%;}"),
     tags$style(
       type = "text/css", 
-      "#inlineTOP label{ display: table-cell; text-align: right; vertical-align: top; } 
+      "#inlineTOP label{ display: table-cell; text-align: right; vertical-align: top;  padding-top:6px} 
       #inlineTOP .form-group {display: table-row; width:100%;}"),
     tags$style(
       type = "text/css", 
-      "#inlineBOT label{ display: table-cell; text-align: right; vertical-align: bottom; } 
+      "#inlineBOT label{ display: table-cell; text-align: right; vertical-align: bottom;  padding-top:6px} 
       #inlineBOT .form-group {display: table-row; width:100%;}"),
     
     )

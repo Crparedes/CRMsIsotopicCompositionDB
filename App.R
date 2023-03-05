@@ -17,6 +17,7 @@ library(rhandsontable)
 library(data.table)
 library(DT)
 library(shinycssloaders)
+library(countrycode)
 
 #library(htmlwidgets)
 #library(htmltools)
@@ -90,6 +91,8 @@ server <- function(input, output, session, devMode = TRUE) {
   SelectedElem <- reactive(input$SelectedElement)
   
   ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem)
+  
+  UploadDataServer('UploadData', devMode = devMode, TableProducers = INITI_CRMproducers)
   
 }
 

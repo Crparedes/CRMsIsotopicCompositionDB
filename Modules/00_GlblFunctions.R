@@ -1,6 +1,7 @@
 spcs <- function(n) {return(paste0(rep('&nbsp;', n), collapse = ''))}
 ReqField <- function(x) {return(HTML(paste0(x, '<font color=\"#FF0000\">*</font>', spcs(3))))}
 NonReqField <- function(x) {return(HTML(paste0(x, spcs(3))))}
+tags$lib <- function(x) return(tags$b(tags$li(x)))
 
 is.null.empty <- function(x) {
   if (is.null(x)) {
