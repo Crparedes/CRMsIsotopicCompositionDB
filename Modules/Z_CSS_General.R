@@ -84,15 +84,15 @@ headTags1 <- tags$li(
     tags$style(
       type = "text/css", 
       "#inline label{ display: table-cell; text-align: right; vertical-align: middle; padding-top:6px} 
-      #inline .form-group {display: table-row; width:100%;}"),
+      #inline .form-group {display: table-row; width:auto !important;}"),
     tags$style(
       type = "text/css", 
-      "#inlineTOP label{ display: table-cell; text-align: right; vertical-align: top;  padding-top:6px} 
-      #inlineTOP .form-group {display: table-row; width:100%;}"),
+      "#inlineTOP label{ display: table-cell; text-align: right; vertical-align: top;  padding-top:8px} 
+      #inlineTOP .form-group {display: table-row;}"),# width:auto !important;}"),
     tags$style(
       type = "text/css", 
       "#inlineBOT label{ display: table-cell; text-align: right; vertical-align: bottom;  padding-top:6px} 
-      #inlineBOT .form-group {display: table-row; width:100%;}"),
+      #inlineBOT .form-group {display: table-row; width:auto !important;}"),
     
     )
   )

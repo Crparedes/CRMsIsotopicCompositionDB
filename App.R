@@ -46,14 +46,11 @@ ui <- fluidPage(
       icon = icon('compass'), value = 'Home', tags$hr(), tags$hr(),
       fluidRow(
         column(
-          8, 
-          # selectizeInput(
-          #   inputId = 'SelectedElement', label = NULL, choices = GenericPeriodicTable$Element,
-          #   selected = NULL,
-          #   options = list(placeholder = 'Write an element or choose it from the periodic table.',
-          #                  onInitialize = I('function() { this.setValue(""); }'))),
+          width = 8,
           h4(style = 'margin-left: 50px;', ('Select an element from the periodic table below:')),
-          includeHTML('www/PeriodicTable.html')), ShowDataUI('ShowData')
+          includeHTML('www/PeriodicTable.html')),
+        # uiOutput('ColumnPeriodTable'), 
+        ShowDataUI('ShowData')
       )
     ),
     tabPanel(
@@ -87,6 +84,14 @@ server <- function(input, output, session, devMode = TRUE) {
   observeEvent(input$brwz, browser())
   
   SelectedElem <- reactive(input$SelectedElement)
+  
+  
+  # ColumnPeriodTable <- reactive({
+  #   ColSize <- ifelse(is.null(SelectedElem()), 8, 5)
+  #   ColumnPeriodTable <- 0
+  #   return(ColumnPeriodTable)
+  # })
+  # output$ColumnPeriodTable <- renderUI(ColumnPeriodTable())
   
   ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem)
   
