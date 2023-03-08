@@ -34,7 +34,5 @@ dbWriteTable(conn = MRCsICDB, name = 'MatrixCRM_DataIR', value = INITI_MatrixCRM
 
 dbListTables(MRCsICDB)
 
-
-
-# dbDisconnect(MRCsICDB)
+dbDisconnect(MRCsICDB)
 

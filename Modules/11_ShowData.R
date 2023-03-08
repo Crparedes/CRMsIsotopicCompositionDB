@@ -27,10 +27,10 @@ ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
 }
 
 ShowDataServer <- function(id, devMode, SelectedElem,
-                           CRMproducers, MeasuReports, MeasRepoAuth,
-                           IsoCompCRM_Info, IsoCompCRM_DataIR, 
-                           CalibraCRM_Info, CalibraCRM_DataIR, 
-                           MatrixCRM_Info, MatrixCRM_DataIR) {
+                           CRMproducers = NULL, MeasuReports = NULL, MeasRepoAuth = NULL,
+                           IsoCompCRM_Info = NULL, IsoCompCRM_DataIR = NULL,
+                           CalibraCRM_Info = NULL, CalibraCRM_DataIR = NULL,
+                           MatrixCRM_Info = NULL, MatrixCRM_DataIR = NULL) {
   moduleServer(
     id,
     function(input, output, session) {

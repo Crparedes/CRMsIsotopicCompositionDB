@@ -1,5 +1,5 @@
 rm(list = ls())   # Delete all objects in workspace
-gc()            # Garbage collector
+gc()              # Garbage collector
 # CRMsIsotopicCompositionDataBase
 
 library(shiny)
@@ -18,25 +18,22 @@ library(data.table)
 library(DT)
 library(shinycssloaders)
 library(countrycode)
-
 #library(htmlwidgets)
 #library(htmltools)
 
+options(mysql = list("host" = "sql9.freesqldatabase.com", "user" = "sql9599488", "password" = "PHsEvvEBuY"))
+
 modules <- with(list(pt = 'Modules/'), paste0(pt, list.files(path = pt)))
 sapply(c(modules), source)
+
+
  source('www/IsotopicData/01_CIAAW_WebPageRvesting.R')
  source('www/IsotopicData/02_INITIAL_DataTableConstruction.R')
 GenericPeriodicTable <- read.csv(file = 'www/IsotopicData/RAW_GenericPeriodicTable.csv')
-MRCsICDB <- RMySQL::dbConnect( ## Hosted freely by https://www.freesqldatabase.com/account/ (5Mb limit)
-  RMySQL::MySQL(), user = 'sql9599488', password = 'PHsEvvEBuY', 
-  dbname = 'sql9599488', host = 'sql9.freesqldatabase.com')
+
 
 ShyTheme <- shinytheme("yeti")
 windowTitle <- 'MRCs Isotopic Composition DataBase'
-
-MRCsICDB <- RMySQL::dbConnect( ## Hosted freely by https://www.freesqldatabase.com/account/ (5Mb limit)
-  RMySQL::MySQL(), user = 'sql9599488', password = 'PHsEvvEBuY', 
-  dbname = 'sql9599488', host = 'sql9.freesqldatabase.com')
 
 ui <- fluidPage(
   withMathJax(),
