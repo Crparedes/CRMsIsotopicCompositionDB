@@ -1,6 +1,7 @@
 # GenericPeriodicTable <- read.csv(file = 'www/IsotopicData/RAW_GenericPeriodicTable.csv')
 INITI_CRMproducers <- read.csv(file ='www/IsotopicData/RAW_0_CRMproducers.csv')
 INITI_MeasuReports <- read.csv(file ='www/IsotopicData/RAW_0_MeasurementReports.csv')
+INITI_MeasRepoAuth <- read.csv(file ='www/IsotopicData/RAW_0_MeasurementReportsAuthors.csv')
 
 INITI_IsoCompCRM_Info   <- read.csv(file ='www/IsotopicData/RAW_1-1_IsoCompCRM_Info.csv')
 INITI_IsoCompCRM_DataIR <- read.csv(file ='www/IsotopicData/RAW_1-2_IsoCompCRM_DataIR.csv')

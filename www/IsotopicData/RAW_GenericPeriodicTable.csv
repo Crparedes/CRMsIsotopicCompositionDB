@@ -11,7 +11,7 @@ Atomic Number,Element,Symbol,Atomic Weight,Period,Group,Phase,Most Stable Crysta
 10,Neon,Ne,20.1797,2,18,gas,,Noble Gas,,0.51,,21.5645,0.0008999,24.703,27.07,8,Ramsay and Travers,1898,1.03,[He] 2s2 2p6,2,18
 11,Sodium,Na,22.98976928,3,1,solid,bcc,Alkali Metal,1,2.2,0.93,5.1391,0.971,371.15,1156,7,Davy,1807,1.228,[Ne] 3s1,3,1
 12,Magnesium,Mg,24.305,3,2,solid,hex,Alkaline Earth Metal,0.72,1.7,1.31,7.6462,1.738,923.15,1363,8,Black,1755,1.023,[Ne] 3s2,3,2
-13,Aluminum,Al,26.9815386,3,13,solid,fcc,Metal,0.54,1.8,1.61,5.9858,2.698,933.4,2792,8,Wöhler,1827,0.897,[Ne] 3s2 3p1,3,13
+13,Aluminum,Al,26.9815386,3,13,solid,fcc,Metal,0.54,1.8,1.61,5.9858,2.698,933.4,2792,8,W≈°hler,1827,0.897,[Ne] 3s2 3p1,3,13
 14,Silicon,Si,28.0855,3,14,solid,fcc,Metalloid,0.4,1.5,1.9,8.1517,2.3296,1683.15,3538,8,Berzelius,1824,0.705,[Ne] 3s2 3p2,3,14
 15,Phosphorus,P,30.973762,3,15,solid,cub,Nonmetal,0.38,1.2,2.19,10.4867,1.82,317.25,553,7,BranBrand,1669,0.769,[Ne] 3s2 3p3,3,15
 16,Sulfur,S,32.065,3,16,solid,orth,Nonmetal,0.37,1.1,2.58,10.36,2.067,388.51,717.8,10,Prehistoric,,0.71,[Ne] 3s2 3p4,3,16
@@ -41,7 +41,7 @@ Atomic Number,Element,Symbol,Atomic Weight,Period,Group,Phase,Most Stable Crysta
 40,Zirconium,Zr,91.224,5,4,solid,hex,Transition Metal,0.72,2.2,1.33,6.6339,6.506,2125.15,4682,20,Klaproth,1789,0.278,[Kr] 4d2 5s2,5,4
 41,Niobium,Nb,92.90638,5,5,solid,bcc,Transition Metal,0.69,2.1,1.6,6.7589,8.57,2741.15,5017,24,Hatchett,1801,0.265,[Kr] 4d4 5s1,5,5
 42,Molybdenum,Mo,95.96,5,6,solid,bcc,Transition Metal,0.65,2,2.16,7.0924,10.22,2890.15,4912,20,Scheele,1778,0.251,[Kr] 4d5 5s1,5,6
-43,Technetium,Tc,98,5,7,artificial,hex,Transition Metal,0.56,2,1.9,7.28,11.5,2473.15,5150,23,Perrier and Segré,1937,,[Kr] 4d5 5s2,5,7
+43,Technetium,Tc,98,5,7,artificial,hex,Transition Metal,0.56,2,1.9,7.28,11.5,2473.15,5150,23,Perrier and Segr≈Ω,1937,,[Kr] 4d5 5s2,5,7
 44,Ruthenium,Ru,101.07,5,8,solid,hex,Transition Metal,0.68,1.9,2.2,7.3605,12.37,2523.15,4423,16,Klaus,1844,0.238,[Kr] 4d7 5s1,5,8
 45,Rhodium,Rh,102.9055,5,9,solid,fcc,Transition Metal,0.68,1.8,2.28,7.4589,12.41,2239.15,3968,20,Wollaston,1803,0.243,[Kr] 4d8 5s1,5,9
 46,Palladium,Pd,106.42,5,10,solid,fcc,Transition Metal,0.86,1.8,2.2,8.3369,12.02,1825.15,3236,21,Wollaston,1803,0.244,[Kr] 4d10,5,10
@@ -105,8 +105,8 @@ Atomic Number,Element,Symbol,Atomic Weight,Period,Group,Phase,Most Stable Crysta
 104,Rutherfordium,Rf,261,7,4,artificial,,Transactinide,,,,,18.1,,,,Ghiorso et al.,1969,,,7,4
 105,Dubnium,Db,262,7,5,artificial,,Transactinide,,,,,39,,,,Ghiorso et al.,1970,,,7,5
 106,Seaborgium,Sg,266,7,6,artificial,,Transactinide,,,,,35,,,,Ghiorso et al.,1974,,,7,6
-107,Bohrium,Bh,264,7,7,artificial,,Transactinide,,,,,37,,,,Armbruster and Münzenberg,1981,,,7,7
-108,Hassium,Hs,267,7,8,artificial,,Transactinide,,,,,41,,,,Armbruster and Münzenberg,1983,,,7,8
+107,Bohrium,Bh,264,7,7,artificial,,Transactinide,,,,,37,,,,Armbruster and M≈∏nzenberg,1981,,,7,7
+108,Hassium,Hs,267,7,8,artificial,,Transactinide,,,,,41,,,,Armbruster and M≈∏nzenberg,1983,,,7,8
 109,Meitnerium,Mt,268,7,9,artificial,,Transactinide,,,,,35,,,,"GSI, Darmstadt, West Germany",1982,,,7,9
 110,Darmstadtium ,Ds ,271,7,10,artificial,,Transactinide,,,,,,,,,,,,,7,10
 111,Roentgenium ,Rg ,272,7,11,artificial,,Transactinide,,,,,,,,,,,,,7,11

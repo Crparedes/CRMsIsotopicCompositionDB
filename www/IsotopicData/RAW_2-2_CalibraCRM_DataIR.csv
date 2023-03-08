@@ -1,1 +1,1 @@
-Element,Report.DOI,CRM.name,Isotopic.ratio,Calibration.standard,Value,Uncertainty,UncertType,k.factor
+Element,Report.DOI,CRM.name,Isotope.amount.ratio,Unit,Value,Uncertainty,UncertType,k.factor,Calibration.standard

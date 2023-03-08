@@ -3,7 +3,7 @@ ShowAvailCRMsUI <- function(id) {
   tags$div(uiOutput(ns('brwz')), uiOutput(ns('UI_CRM_List')), tags$br())
 }
 
-ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, MeasuReports = NULL, Actionate,
+ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, MeasuReports = NULL, MeasRepoAuth = NULL, Actionate,
                                 CRMsInfoTable, CRMsDataTable, gnrlClss, key) {
   moduleServer(
     id,
@@ -56,11 +56,11 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, Me
         if (key == 'Certified') {
           DT <- copy(CRMsDataTable[
             CRMsDataTable$CRM.name == input$SelectedCRM, 
-            c('Isotopic.ratio', 'Type', 'Value', 'Uncertainty', 'UncertType', 'k.factor')])
+            c('Isotope.amount.ratio', 'Type', 'Unit', 'Value', 'Uncertainty', 'UncertType', 'k.factor')])
         } else {
           DT <- copy(CRMsDataTable[
             CRMsDataTable$CRM.name == input$SelectedCRM, 
-            c('Isotopic.ratio', 'Value', 'Uncertainty', 'UncertType', 'k.factor', 'Calibration.standard')])
+            c('Isotope.amount.ratio', 'Unit', 'Value', 'Uncertainty', 'UncertType', 'k.factor', 'Calibration.standard')])
         }
         
         DT$Value <- as.character(DT$Value)
@@ -69,7 +69,7 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, Me
       })
       
       output$UI_CRM_List <- renderUI(UI_CRM_List())
-      output$Table_CRM_List <- DT::renderDataTable(Table_CRM_List(), escape = FALSE)#sanitize.text.function = function(x) {x})
+      output$Table_CRM_List <- DT::renderDataTable(Table_CRM_List(), escape = FALSE, selection = "single", server = TRUE)#sanitize.text.function = function(x) {x})
     }
   )
 }

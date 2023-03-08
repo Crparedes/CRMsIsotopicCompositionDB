@@ -3,6 +3,10 @@ ReqField <- function(x) {return(HTML(paste0(x, '<font color=\"#FF0000\">*</font>
 NonReqField <- function(x) {return(HTML(paste0(x, spcs(3))))}
 tags$lib <- function(x) return(tags$b(tags$li(x)))
 
+TrimTableElement <- function(table, element) {
+  return(table[grep(tolower(element), table$Elements, value = FALSE), ])
+}
+
 is.null.empty <- function(x) {
   if (is.null(x)) {
     return(TRUE)

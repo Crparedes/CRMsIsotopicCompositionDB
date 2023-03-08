@@ -24,9 +24,12 @@ library(countrycode)
 
 modules <- with(list(pt = 'Modules/'), paste0(pt, list.files(path = pt)))
 sapply(c(modules), source)
-source('www/IsotopicData/01_CIAAW_WebPageRvesting.R')
-source('www/IsotopicData/02_INITIAL_DataTableConstruction.R')
+ source('www/IsotopicData/01_CIAAW_WebPageRvesting.R')
+ source('www/IsotopicData/02_INITIAL_DataTableConstruction.R')
 GenericPeriodicTable <- read.csv(file = 'www/IsotopicData/RAW_GenericPeriodicTable.csv')
+MRCsICDB <- RMySQL::dbConnect( ## Hosted freely by https://www.freesqldatabase.com/account/ (5Mb limit)
+  RMySQL::MySQL(), user = 'sql9599488', password = 'PHsEvvEBuY', 
+  dbname = 'sql9599488', host = 'sql9.freesqldatabase.com')
 
 ShyTheme <- shinytheme("yeti")
 windowTitle <- 'MRCs Isotopic Composition DataBase'
@@ -93,7 +96,11 @@ server <- function(input, output, session, devMode = TRUE) {
   # })
   # output$ColumnPeriodTable <- renderUI(ColumnPeriodTable())
   
-  ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem)
+  ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem,
+                 CRMproducers = INITI_CRMproducers, MeasuReports = INITI_MeasuReports, MeasRepoAuth = INITI_MeasRepoAuth,
+                 IsoCompCRM_Info = INITI_IsoCompCRM_Info, IsoCompCRM_DataIR = INITI_IsoCompCRM_DataIR,
+                 CalibraCRM_Info = INITI_CalibraCRM_Info, CalibraCRM_DataIR = INITI_CalibraCRM_DataIR,
+                 MatrixCRM_Info = INITI_MatrixCRM_Info, MatrixCRM_DataIR = INITI_MatrixCRM_DataIR)
   
   UploadDataServer('UploadData', devMode = devMode, TableProducers = INITI_CRMproducers, TableStudies = INITI_MeasuReports)
   
