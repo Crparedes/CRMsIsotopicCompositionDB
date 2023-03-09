@@ -1,12 +1,11 @@
 ## See secttion 5 of https://shiny.rstudio.com/articles/persistent-data-storage.html#mysql
 
-databaseName <- "myshinydatabase"
-table <- "responses"
+options(mysql = list("host" = "sql9.freesqldatabase.com", "user" = "sql9599488", "password" = "PHsEvvEBuY"))
 
 saveData <- function(data) {
   # Connect to the database
-  MRCsICDB <- dbConnect(drv = MySQL(), user = options()$mysql$user, password = options()$mysql$password,
-                        dbname = options()$mysql$user, host = options()$mysql$host)
+  MRCsICDB <- dbConnect(RMySQL::MySQL(), user = "sql9599488", password = "PHsEvvEBuY",
+                        dbname = "sql9599488", host = "sql9.freesqldatabase.com")
   
   # Construct the update query by looping over the data fields
   query <- sprintf(
@@ -23,8 +22,8 @@ saveData <- function(data) {
 
 loadFromDataBase <- function(tableName, element = NULL) {
   # Connect to the database
-  MRCsICDB <- dbConnect(drv = MySQL(), user = options()$mysql$user, password = options()$mysql$password,
-                        dbname = options()$mysql$user, host = options()$mysql$host)
+  MRCsICDB <- dbConnect(RMySQL::MySQL(), user = "sql9599488", password = "PHsEvvEBuY",
+                        dbname = "sql9599488", host = "sql9.freesqldatabase.com")
   
   # Construct the fetching query
   query <- ifelse(missing(element),
