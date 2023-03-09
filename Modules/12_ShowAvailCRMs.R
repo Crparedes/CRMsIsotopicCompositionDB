@@ -3,7 +3,8 @@ ShowAvailCRMsUI <- function(id) {
   tags$div(uiOutput(ns('brwz')), uiOutput(ns('UI_CRM_List')), tags$br())
 }
 
-ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, MeasuReports = NULL, MeasRepoAuth = NULL, Actionate,
+ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, 
+                                MeasuReports = NULL, MeasRepoAuth = NULL, Actionate,
                                 CRMsInfoTable, CRMsDataTable, gnrlClss, key) {
   moduleServer(
     id,

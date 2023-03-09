@@ -27,8 +27,9 @@ modules <- with(list(pt = 'Modules/'), paste0(pt, list.files(path = pt)))
 sapply(c(modules), source)
 
  #### Source following lines to construct initial tables to be used in 
- ### source('www/IsotopicData/01_CIAAW_WebPageRvesting.R')
  ### source('www/IsotopicData/02_INITIAL_DataTableConstruction.R')
+
+source('www/IsotopicData/01_CIAAW_WebPageRvesting.R')
 GenericPeriodicTable <- read.csv(file = 'www/IsotopicData/RAW_GenericPeriodicTable.csv')
 
 
@@ -83,7 +84,7 @@ server <- function(input, output, session, devMode = TRUE) {
       actionButton(inputId = 'brwz', label = tags$b('Pause App')))))
   observeEvent(input$brwz, browser())
   
-  SelectedElem <- reactive(input$SelectedElement)
+  SelectedElem <- reactive(tolower(input$SelectedElement))
   
   
   # ColumnPeriodTable <- reactive({

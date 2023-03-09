@@ -21,13 +21,15 @@ saveData <- function(data) {
   dbDisconnect(MRCsICDB)
 }
 
-loadFromDataBase <- function(tableName) {
+loadFromDataBase <- function(tableName, element = NULL) {
   # Connect to the database
   MRCsICDB <- dbConnect(drv = MySQL(), user = options()$mysql$user, password = options()$mysql$password,
                         dbname = options()$mysql$user, host = options()$mysql$host)
   
   # Construct the fetching query
-  query <- sprintf("SELECT * FROM %s", tableName)
+  query <- ifelse(missing(element),
+                  sprintf("SELECT * FROM %s", tableName),
+                  sprintf("SELECT * FROM %s WHERE Elements LIKE '%%%s%%'", tableName, element))
   
   # Submit the fetch query and disconnect
   data <- dbGetQuery(MRCsICDB, query)
@@ -35,3 +37,5 @@ loadFromDataBase <- function(tableName) {
   return(data)
 }
 
+# loadFromDataBase(tableName = 'MatrixCRM_DataIR')
+# loadFromDataBase(tableName = 'MatrixCRM_DataIR', element = 'lead')

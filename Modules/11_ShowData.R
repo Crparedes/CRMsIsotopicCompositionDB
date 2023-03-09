@@ -85,20 +85,20 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
           id = 'IsoCompCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
           gnrlClss = 'List_IsoCompCRM', key = 'Certified', Actionate = reactive(input$AcLnk_IsoCompCRM),
           CRMproducers = loadFromDataBase('CRMproducers'), 
-          CRMsInfoTable = TrimTableElement(loadFromDataBase('IsoCompCRM_Info'), SelectedElem()), 
-          CRMsDataTable = TrimTableElement(loadFromDataBase('IsoCompCRM_DataIR'), SelectedElem()))
+          CRMsInfoTable = loadFromDataBase('IsoCompCRM_Info', SelectedElem()), 
+          CRMsDataTable = loadFromDataBase('IsoCompCRM_DataIR', SelectedElem()))
       })
        
       # Calibration solution and high purity materials
       observe({
         req(SelectedElem())
         ShowAvailCRMsServer(
-          id = 'CalibraCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
+          id = 'CalibraCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem,
           gnrlClss = 'List_CalibraCRM', key = 'Reported', Actionate = reactive(input$AcLnk_CalibraCRM),
           CRMproducers = loadFromDataBase('CRMproducers'),
           MeasuReports = loadFromDataBase('MeasuReports'), MeasRepoAuth = loadFromDataBase('MeasRepoAuth'),
-          CRMsInfoTable = TrimTableElement(loadFromDataBase('CalibraCRM_Info'), SelectedElem()), 
-          CRMsDataTable = TrimTableElement(loadFromDataBase('CalibraCRM_DataIR'), SelectedElem()))
+          CRMsInfoTable = loadFromDataBase('CalibraCRM_Info', SelectedElem()),
+          CRMsDataTable = loadFromDataBase('CalibraCRM_DataIR', SelectedElem()))
       })
       
       # Matrix CRMs
@@ -109,8 +109,8 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
           gnrlClss = 'List_MatrixCRM', key = 'Reported', Actionate = reactive(input$AcLnk_MatrixCRM),
           CRMproducers = loadFromDataBase('CRMproducers'),
           MeasuReports = loadFromDataBase('MeasuReports'), MeasRepoAuth = loadFromDataBase('MeasRepoAuth'),
-          CRMsInfoTable = TrimTableElement(loadFromDataBase('MatrixCRM_Info'), SelectedElem()), 
-          CRMsDataTable = TrimTableElement(loadFromDataBase('MatrixCRM_DataIR'), SelectedElem()))
+          CRMsInfoTable = loadFromDataBase('MatrixCRM_Info', SelectedElem()), 
+          CRMsDataTable = loadFromDataBase('MatrixCRM_DataIR', SelectedElem()))
       })
       
       NoElement <- eventReactive(
