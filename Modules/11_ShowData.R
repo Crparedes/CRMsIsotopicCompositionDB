@@ -26,11 +26,7 @@ ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
   )
 }
 
-ShowDataServer <- function(id, devMode, SelectedElem,
-                           CRMproducers = NULL, MeasuReports = NULL, MeasRepoAuth = NULL,
-                           IsoCompCRM_Info = NULL, IsoCompCRM_DataIR = NULL,
-                           CalibraCRM_Info = NULL, CalibraCRM_DataIR = NULL,
-                           MatrixCRM_Info = NULL, MatrixCRM_DataIR = NULL) {
+ShowDataServer <- function(id, devMode, SelectedElem) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -88,9 +84,9 @@ ShowDataServer <- function(id, devMode, SelectedElem,
         ShowAvailCRMsServer(
           id = 'IsoCompCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
           gnrlClss = 'List_IsoCompCRM', key = 'Certified', Actionate = reactive(input$AcLnk_IsoCompCRM),
-          CRMproducers = CRMproducers, 
-          CRMsInfoTable = TrimTableElement(IsoCompCRM_Info, SelectedElem()), 
-          CRMsDataTable = TrimTableElement(IsoCompCRM_DataIR, SelectedElem()))
+          CRMproducers = loadFromDataBase('CRMproducers'), 
+          CRMsInfoTable = TrimTableElement(loadFromDataBase('IsoCompCRM_Info'), SelectedElem()), 
+          CRMsDataTable = TrimTableElement(loadFromDataBase('IsoCompCRM_DataIR'), SelectedElem()))
       })
        
       # Calibration solution and high purity materials
@@ -99,9 +95,10 @@ ShowDataServer <- function(id, devMode, SelectedElem,
         ShowAvailCRMsServer(
           id = 'CalibraCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
           gnrlClss = 'List_CalibraCRM', key = 'Reported', Actionate = reactive(input$AcLnk_CalibraCRM),
-          CRMproducers = CRMproducers, MeasuReports = MeasuReports, MeasRepoAuth = MeasRepoAuth,
-          CRMsInfoTable = TrimTableElement(CalibraCRM_Info, SelectedElem()), 
-          CRMsDataTable = TrimTableElement(CalibraCRM_DataIR, SelectedElem()))
+          CRMproducers = loadFromDataBase('CRMproducers'),
+          MeasuReports = loadFromDataBase('MeasuReports'), MeasRepoAuth = loadFromDataBase('MeasRepoAuth'),
+          CRMsInfoTable = TrimTableElement(loadFromDataBase('CalibraCRM_Info'), SelectedElem()), 
+          CRMsDataTable = TrimTableElement(loadFromDataBase('CalibraCRM_DataIR'), SelectedElem()))
       })
       
       # Matrix CRMs
@@ -110,9 +107,10 @@ ShowDataServer <- function(id, devMode, SelectedElem,
         ShowAvailCRMsServer(
           id = 'MatrixCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
           gnrlClss = 'List_MatrixCRM', key = 'Reported', Actionate = reactive(input$AcLnk_MatrixCRM),
-          CRMproducers = CRMproducers, MeasuReports = MeasuReports, MeasRepoAuth = MeasRepoAuth,
-          CRMsInfoTable = TrimTableElement(MatrixCRM_Info, SelectedElem()), 
-          CRMsDataTable = TrimTableElement(MatrixCRM_DataIR, SelectedElem()))
+          CRMproducers = loadFromDataBase('CRMproducers'),
+          MeasuReports = loadFromDataBase('MeasuReports'), MeasRepoAuth = loadFromDataBase('MeasRepoAuth'),
+          CRMsInfoTable = TrimTableElement(loadFromDataBase('MatrixCRM_Info'), SelectedElem()), 
+          CRMsDataTable = TrimTableElement(loadFromDataBase('MatrixCRM_DataIR'), SelectedElem()))
       })
       
       NoElement <- eventReactive(

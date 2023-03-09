@@ -1,6 +1,8 @@
-# install.packages('odbc')
-# install.packages('RMySQL')
-# install.packages('config') # If we want to store the credentials to connect to the database in a .yml file.
+#### install.packages('odbc')
+#### install.packages('RMySQL')
+#### install.packages('config') # If we want to store the credentials to connect to the database in a .yml file.
+
+
 
 MRCsICDB <- RMySQL::dbConnect( ## Hosted freely by https://www.freesqldatabase.com/account/ (5Mb limit)
   RMySQL::MySQL(), user = 'sql9599488', password = 'PHsEvvEBuY', 

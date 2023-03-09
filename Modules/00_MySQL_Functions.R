@@ -5,9 +5,9 @@ table <- "responses"
 
 saveData <- function(data) {
   # Connect to the database
-  MRCsICDB <- RMySQL::dbConnect(
-    RMySQL::MySQL(), user = options()$mysql$user, password = options()$mysql$password,
-    dbname = options()$mysql$user, host = options()$mysql$host)
+  MRCsICDB <- dbConnect(drv = MySQL(), user = options()$mysql$user, password = options()$mysql$password,
+                        dbname = options()$mysql$user, host = options()$mysql$host)
+  
   # Construct the update query by looping over the data fields
   query <- sprintf(
     "INSERT INTO %s (%s) VALUES ('%s')",
@@ -15,21 +15,23 @@ saveData <- function(data) {
     paste(names(data), collapse = ", "),
     paste(data, collapse = "', '")
   )
+  
   # Submit the update query and disconnect
   dbGetQuery(MRCsICDB, query)
   dbDisconnect(MRCsICDB)
 }
 
-loadData <- function() {
+loadFromDataBase <- function(tableName) {
   # Connect to the database
-  MRCsICDB <- RMySQL::dbConnect(
-    RMySQL::MySQL(), user = options()$mysql$user, password = options()$mysql$password,
-    dbname = options()$mysql$user, host = options()$mysql$host)
+  MRCsICDB <- dbConnect(drv = MySQL(), user = options()$mysql$user, password = options()$mysql$password,
+                        dbname = options()$mysql$user, host = options()$mysql$host)
+  
   # Construct the fetching query
-  query <- sprintf("SELECT * FROM %s", table)
+  query <- sprintf("SELECT * FROM %s", tableName)
+  
   # Submit the fetch query and disconnect
   data <- dbGetQuery(MRCsICDB, query)
   dbDisconnect(MRCsICDB)
-  data
+  return(data)
 }
 
