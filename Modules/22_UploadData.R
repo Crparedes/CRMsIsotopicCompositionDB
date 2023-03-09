@@ -9,9 +9,9 @@ UploadDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
           ns('CRM_type'), label = tags$lib('Which kind of data will you provide:'), 
           selected = character(0), width = '100%',
           choices = list(
-            '(NOT IMPLEMENTED YET) Upload a Digital Reference Material Certificate with isotopic composition data' = 'DRMC',
-            'Data of a CRM with certified values for isotopic composition' = 'IsoCompCRM',
-            'Report of measured isotopic composition in a (non isotopically certified) CRM' = 'LitRepoCRM')),
+            '(UNDER CONSTRUCTION) Data of a CRM with certified values for isotopic composition' = 'IsoCompCRM',
+            '(UNDER CONSTRUCTION) Report of measured isotopic composition in a (non isotopically certified) CRM' = 'LitRepoCRM',
+            '(FEATURE TO IMPLEMENT IN THE FUTURE) Upload a Digital Reference Material Certificate with isotopic composition data' = 'DRMC')),
         conditionalPanel(
           "input.CRM_type != null", ns = ns,
           UploadProduStudyUI(ns('Producer'), key = 'Producer'),
