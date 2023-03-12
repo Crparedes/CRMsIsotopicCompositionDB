@@ -20,16 +20,22 @@ saveData <- function(data) {
   dbDisconnect(MRCsICDB)
 }
 
-loadFromDataBase <- function(tableName, element = NULL) {
+loadFromDataBase <- function(tableName, element = NULL, CRM = NULL) {
   # Connect to the database
   MRCsICDB <- dbConnect(RMySQL::MySQL(), user = "sql9599488", password = "PHsEvvEBuY",
                         dbname = "sql9599488", host = "sql9.freesqldatabase.com")
   
   # Construct the fetching query
-  query <- ifelse(missing(element),
-                  sprintf("SELECT * FROM %s", tableName),
-                  sprintf("SELECT * FROM %s WHERE Elements LIKE '%%%s%%'", tableName, element))
-  
+  if (missing(element) && missing(CRM)) {
+    query <- sprintf("SELECT * FROM %s", tableName)
+  } else {
+    if (missing(CRM)) {
+      query <- sprintf("SELECT * FROM %s WHERE Elements LIKE '%%%s%%'", tableName, element)
+    } else {
+      query <- sprintf("SELECT * FROM %s WHERE CRM_name LIKE '%%%s%%'", tableName, CRM)
+    }
+    
+  }
   # Submit the fetch query and disconnect
   data <- dbGetQuery(MRCsICDB, query)
   dbDisconnect(MRCsICDB)
@@ -38,3 +44,12 @@ loadFromDataBase <- function(tableName, element = NULL) {
 
 # loadFromDataBase(tableName = 'MatrixCRM_DataIR')
 # loadFromDataBase(tableName = 'MatrixCRM_DataIR', element = 'lead')
+# library(microbenchmark)
+# library(ggthemes)
+# library(ggplot2) 
+# 
+# tm <- microbenchmark(loadFromDataBase('IsoCompCRM_Info', element = 'lead'), 
+#                      TrimTableElement(loadFromDataBase('IsoCompCRM_Info'), element = 'lead'), 
+#                      times = 100)  
+# print(tm)
+# autoplot(object = tm)

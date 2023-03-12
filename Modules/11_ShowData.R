@@ -2,31 +2,25 @@ ShowDataUI <- function(id, label = "Counter", FlTy = 'Excel') {
   ns <- NS(id)
   column(
     style = 'margin-left: -20px',
-    4, tags$br(), uiOutput(ns('brwz')),
-    h2('Element: ', tags$b(textOutput(ns('SelectedElem'), inline = TRUE))), 
+    5, tags$br(), uiOutput(ns('brwz')),
+    h2('Element ', tags$b(textOutput(ns('SelectedElem'), inline = TRUE))), 
     niceSeparator(),
-    h4(style = 'margin-left: 10px', tags$b('Certified reference materials in the database:')),
+    h4(style = 'margin-left: 10px', tags$b('Certified reference materials in the database')), 
+    withSpinner(uiOutput(ns('NoElement')), type = 6, color = '#808080', proxy.height = '100px'),
     (div(
       style = 'margin: 20px', class = 'CRMsActionLinks',
-      uiOutput(ns('NoElement')),
-      actionLink(inputId = ns('AcLnk_IsoCompCRM'), icon = icon('atom'), style = 'display: inline;',
-                 tags$b(' With certified values for isotopic composition')),
       ShowAvailCRMsUI(ns("IsoCompCRM")),
-      
-      actionLink(inputId = ns('AcLnk_CalibraCRM'), icon = icon('flask'), style = 'display: inline;',
-                 tags$b(' Calibration solutions and high purity solids')), 
       ShowAvailCRMsUI(ns("CalibraCRM")),
-      
-      actionLink(inputId = ns('AcLnk_MatrixCRM'), icon = icon('carrot'), style = 'display: inline;',
-                 tags$b(' Matrix CRMs')), 
       ShowAvailCRMsUI(ns("MatrixCRM"))
     )),
     niceSeparator(),
+    h4(style = 'margin-left: 10px', tags$b('CIAAW data on natural isotopic composition')), 
+    withSpinner(uiOutput(ns('NoElement2')), type = 6, color = '#808080', proxy.height = '100px'),
     div(style = 'margin: 20px', uiOutput(ns('IUPAC_CIAAW')))
   )
 }
 
-ShowDataServer <- function(id, devMode, SelectedElem) {
+ShowDataServer <- function(id, devMode, SelectedElem, CRMproducers, MeasuReports, MeasRepoAuth) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -35,9 +29,6 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
       
       observe(toggleElement(condition = nrow(isotopes()) > 1, selector = 'div.CRMsActionLinks',
                             anim = TRUE, animType = 'fade', time = 1))
-      observeEvent(input$AcLnk_IsoCompCRM, toggle(selector = 'div.List_IsoCompCRM', anim = TRUE, animType = 'fade', time = 0.4))
-      observeEvent(input$AcLnk_CalibraCRM, toggle(selector = 'div.List_CalibraCRM', anim = TRUE, animType = 'fade', time = 0.4))
-      observeEvent(input$AcLnk_MatrixCRM, toggle(selector = 'div.List_MatrixCRM', anim = TRUE, animType = 'fade', time = 0.4))
       
       # CIAAW Information
       {
@@ -65,11 +56,10 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
               'For isotopic relative abundances the uncertainties are given  in parentheses, following the last significant digit to which they are attributed.')
             Notes <- as.list(c(UncertStat, Notes))  
             return(tags$div(
-              h4(style = 'margin-left: -10px', 
-                 tags$a(tags$b('CIAAW data on natural isotopic composition'), target = '_blank',
-                        href = paste0('https://ciaaw.org/', tolower(SelectedElem()), '.htm'))),
+              tags$a('See full information on the IUPAC CIAAW webpage.', target = '_blank',
+                     href = paste0('https://ciaaw.org/', tolower(SelectedElem()), '.htm')),
               tags$hr(), dataTableOutput(session$ns('IUPAC_Table')), tags$hr(),
-              tags$div(#style = 'font-size: 11px;',
+              tags$div(style = 'font-size: 0.7vw;',
                 tags$b('Notes:'), 
                 tags$ul(style = 'list-style-position: outside; font-size:0.9em',
                         HTML(paste0(lapply(Notes, FUN = function(x) return(as.character(tags$li(x)))), collapse = ''))))
@@ -78,48 +68,39 @@ ShowDataServer <- function(id, devMode, SelectedElem) {
         })
       }
       
-      # Isotopic Composition CRMs
+      
       observe({
-        req(SelectedElem())
+        # Isotopic Composition CRMs
         ShowAvailCRMsServer(
-          id = 'IsoCompCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
-          gnrlClss = 'List_IsoCompCRM', key = 'Certified', Actionate = reactive(input$AcLnk_IsoCompCRM),
-          CRMproducers = loadFromDataBase('CRMproducers'), 
-          CRMsInfoTable = loadFromDataBase('IsoCompCRM_Info', SelectedElem()), 
-          CRMsDataTable = loadFromDataBase('IsoCompCRM_DataIR', SelectedElem()))
-      })
+          id = 'IsoCompCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem,
+          icono = icon('atom'), description = ' With certified values for isotopic composition', 
+          gnrlClss = 'List_IsoCompCRM', key = 'Certified',
+          CRMproducers = CRMproducers,
+          Info_TableName = 'IsoCompCRM_Info', CRMsData_TableName = 'IsoCompCRM_DataIR')
        
-      # Calibration solution and high purity materials
-      observe({
-        req(SelectedElem())
+        # Calibration solution and high purity materials
         ShowAvailCRMsServer(
           id = 'CalibraCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem,
-          gnrlClss = 'List_CalibraCRM', key = 'Reported', Actionate = reactive(input$AcLnk_CalibraCRM),
-          CRMproducers = loadFromDataBase('CRMproducers'),
-          MeasuReports = loadFromDataBase('MeasuReports'), MeasRepoAuth = loadFromDataBase('MeasRepoAuth'),
-          CRMsInfoTable = loadFromDataBase('CalibraCRM_Info', SelectedElem()),
-          CRMsDataTable = loadFromDataBase('CalibraCRM_DataIR', SelectedElem()))
-      })
-      
-      # Matrix CRMs
-      observe({
-        req(SelectedElem())
+          icono = icon('flask'), description = ' Calibration solutions and high purity solids',
+          gnrlClss = 'List_CalibraCRM', key = 'Reported',
+          CRMproducers = CRMproducers, MeasuReports = MeasuReports, MeasRepoAuth = MeasRepoAuth,
+          Info_TableName = 'CalibraCRM_Info', CRMsData_TableName = 'CalibraCRM_DataIR')
+        
+        # Matrix CRMs
         ShowAvailCRMsServer(
-          id = 'MatrixCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem, 
-          gnrlClss = 'List_MatrixCRM', key = 'Reported', Actionate = reactive(input$AcLnk_MatrixCRM),
-          CRMproducers = loadFromDataBase('CRMproducers'),
-          MeasuReports = loadFromDataBase('MeasuReports'), MeasRepoAuth = loadFromDataBase('MeasRepoAuth'),
-          CRMsInfoTable = loadFromDataBase('MatrixCRM_Info', SelectedElem()), 
-          CRMsDataTable = loadFromDataBase('MatrixCRM_DataIR', SelectedElem()))
+          id = 'MatrixCRM', id2 = id, devMode = devMode, SelectedElem = SelectedElem,
+          icono = icon('carrot'), description = ' Matrix CRMs',
+          gnrlClss = 'List_MatrixCRM', key = 'Reported',
+          CRMproducers = CRMproducers, MeasuReports = MeasuReports, MeasRepoAuth = MeasRepoAuth,
+          Info_TableName = 'MatrixCRM_Info', CRMsData_TableName = 'MatrixCRM_DataIR')
       })
       
-      NoElement <- eventReactive(
-        c(input$AcLnk_MatrixCRM, input$AcLnk_CalibraCRM, input$AcLnk_IsoCompCRM, SelectedElem()), ignoreInit = TRUE, {
-        if (is.null(SelectedElem())) {
-          return(tags$b(style = 'color: red;', "Please select an element from the periodic table.", tags$hr()))
+      NoElement <- reactive({
+        if (length(SelectedElem()) == 0) {
+          return(tags$b(style = 'color: gray; margin-left: 30px', "Please select an element from the periodic table."))
         } else {return()}})
       
-      output$NoElement     <- renderUI(NoElement())
+      output$NoElement     <- output$NoElement2 <- renderUI(NoElement())
       output$SelectedElem  <- renderText(SelectedElem())
       output$IUPAC_CIAAW   <- renderUI(IUPAC_CIAAW())
       output$IUPAC_Table   <- renderDataTable(IUPAC_Table(), options = list(dom = 't'), rownames = FALSE, selection = "single")

@@ -4,10 +4,10 @@
 
 
 ### PROCEED CAUTIOSLY
-# MRCsICDB <- RMySQL::dbConnect( ## Hosted freely by https://www.freesqldatabase.com/account/ (5Mb limit)
-#   RMySQL::MySQL(), #user = 'sql9599488', #password = 'PHsEvvEBuY', 
-#   dbname = 'sql9599488', #host = 'sql9.freesqldatabase.com'
-# )
+MRCsICDB <- RMySQL::dbConnect( ## Hosted freely by https://www.freesqldatabase.com/account/ (5Mb limit)
+  RMySQL::MySQL(), user = 'sql9599488', password = 'PHsEvvEBuY',
+  dbname = 'sql9599488', host = 'sql9.freesqldatabase.com'
+)
 
 # Following line will delete all tables
 ####for (i in dbListTables(MRCsICDB)) RMySQL::dbSendQuery(MRCsICDB, paste0("DROP TABLE ", i))
@@ -16,7 +16,7 @@ dbListTables(MRCsICDB)
 
 source('www/IsotopicData/01_CIAAW_WebPageRvesting.R')
 source('www/IsotopicData/02_INITIAL_DataTableConstruction.R')
-# overwrite <- FALSE
+overwrite <- TRUE
 
 dbWriteTable(overwrite = overwrite, conn = MRCsICDB, name = 'CIAAW_NatIsotAbunTable', value = CIAAW_NatIsotAbunTable)
 dbWriteTable(overwrite = overwrite, conn = MRCsICDB, name = 'CIAAW_NatIsotAbunFtnts', value = CIAAW_NatIsotAbunFtnts)

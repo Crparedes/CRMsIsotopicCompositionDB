@@ -1,4 +1,4 @@
-CRM.name,Elements,Lot,Producer,Description,Presentation,URL
+CRM_name,Elements,Lot,Producer,Description,Presentation,URL
 SRM 981,lead,March 1991,NIST,Common Lead Isotopic Standard,High purity lead wire,https://shop.nist.gov/ccrz__ProductDetails?sku=981&cclcl=en_US
 SRM 982,lead,December 2004,NIST,Equal-Atom Lead Isotopic Standard,High purity lead wire,https://shop.nist.gov/ccrz__ProductDetails?sku=982&cclcl=en_US
 SRM 983,lead,December 2004,NIST,Radiogenic Lead Isotopic Standard,High purity lead wire,https://shop.nist.gov/ccrz__ProductDetails?sku=983&cclcl=en_US

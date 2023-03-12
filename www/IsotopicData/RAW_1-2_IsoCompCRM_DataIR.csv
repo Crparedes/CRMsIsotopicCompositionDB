@@ -1,4 +1,4 @@
-Elements,CRM.name,Isotope.amount.ratio,Type,Unit,Value,Uncertainty,UncertType,k.factor
+Elements,CRM_name,IsotopeAmountRatio,Type,Unit,Value,Uncertainty,UncertType,k_factor
 lead,SRM 981,204Pb/206Pb,Certified,mol/mol,0.059042,0.000037,Expanded,
 lead,SRM 981,207Pb/206Pb,Certified,mol/mol,0.91464,0.00033,Expanded,
 lead,SRM 981,208Pb/206Pb,Certified,mol/mol,21.681,0.0008,Expanded,

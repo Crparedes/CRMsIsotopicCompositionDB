@@ -1,34 +1,55 @@
 ShowAvailCRMsUI <- function(id) {
   ns <- NS(id)
-  tags$div(uiOutput(ns('brwz')), uiOutput(ns('UI_CRM_List')), tags$br())
+  tags$div(
+    uiOutput(ns('AcLnk')), #actionLink(inputId = ns('AcLnk2'), icon = icon, style = 'display: inline;', tags$b(description)),
+    uiOutput(ns('brwz')),
+    uiOutput(ns('UI_CRM_List')),# %>% withSpinner(type = 6, color = '#808080', proxy.height = '50px'),
+    tags$br())
 }
 
-ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers, 
-                                MeasuReports = NULL, MeasRepoAuth = NULL, Actionate,
-                                CRMsInfoTable, CRMsDataTable, gnrlClss, key) {
+ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, icono, description,
+                                CRMproducers, MeasuReports = NULL, MeasRepoAuth = NULL,
+                                Info_TableName, CRMsData_TableName, gnrlClss, key) {
   moduleServer(
     id,
     function(input, output, session) {
       output$brwz <- renderUI(if(devMode()) return(actionButton(session$ns('brwz'), label = tags$b('Pause submodule'))))
       observeEvent(input$brwz, browser())
       
+      AcLnk <- eventReactive(SelectedElem(), ignoreInit = TRUE, {
+        actionLink(inputId = session$ns('AcLnk'), icon = icono, style = 'display: inline;', tags$b(description))
+      })
+      output$AcLnk <- renderUI(AcLnk())
+      
+      observeEvent(input$AcLnk, {
+        showElement(selector = paste0('div.', gnrlClss), anim = TRUE, animType = 'fade', time = 0.4)
+      })
+      
+      
+      
+      
+      CRMsInfoTable <- eventReactive(input$AcLnk, loadFromDataBase(Info_TableName, element = SelectedElem()))
+      
+      
       NoInfo <- reactive(paste0('There are no entries yet for ', tolower(SelectedElem()), ' in this category.'))
       
       UI_CRM_List <- reactive({
+        # req(input$AcLnk)
         req(SelectedElem)
-        if (nrow(CRMsInfoTable) >= 1) {
+        if (nrow(CRMsInfoTable()) >= 1) {
           ElmntToPrnt <- div(tags$hr(), DT::dataTableOutput(session$ns('Table_CRM_List')), tags$hr())
         } else {
           ElmntToPrnt <- NoInfo()
         }
-        return(hidden(tags$div(class = gnrlClss, style = 'margin-left: 10px;', ElmntToPrnt)))
+        return(tags$div(class = gnrlClss, style = 'margin-left: 10px;', ElmntToPrnt))
       })
       
       Table_CRM_List <- reactive({# From https://stackoverflow.com/a/70763580/7612904
-        DT <- copy(CRMsInfoTable[, c("Producer", "CRM.name", "Lot", "Description")])
+        # req(input$AcLnk)
+        DT <- copy(CRMsInfoTable()[, c("Producer", "CRM_name", "Lot", "Description")])
         setDT(DT)
         inputName <- paste0(id2, '-', id, '-SelectedCRM')
-        DT[, inputId := CRM.name][
+        DT[, inputId := CRM_name][
           , Details := as.character(
             actionLink(
               inputId = session$ns(inputId), label = 'Show details', class = 'CRMOption',
@@ -38,7 +59,7 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers,
       })
       
       observeEvent(input$SelectedCRM, ignoreInit = TRUE, {
-        IndivData <- CRMsInfoTable[CRMsInfoTable$CRM.name == input$SelectedCRM, ]
+        IndivData <- CRMsInfoTable()[CRMsInfoTable()$CRM_name == input$SelectedCRM, ]
         Producer  <- CRMproducers[CRMproducers$Producer == IndivData$Producer, ]
         
         if (TRUE) {
@@ -46,31 +67,31 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, CRMproducers,
             title = HTML(paste0(key, ' isotopic composition of ', tags$b(input$SelectedCRM))), easyClose = TRUE,
             crmSummary(Producer = Producer, Data = IndivData, key = key),
             tags$hr(),
-            tableOutput(session$ns("Table_CRM_IndivData")),
+            withSpinner(
+              tableOutput(session$ns("Table_CRM_IndivData")), 
+              type = 6, color = '#808080', proxy.height = '50px'),
             tags$hr(),
             if (key == 'Reported') StudySummary(MeasuReports[MeasuReports$Report.DOI == IndivData$Report.DOI, ])))
         }
       })
       
-      output$Table_CRM_IndivData <- renderTable({
-        req(input$SelectedCRM)
+      Table_CRM_IndivData <- eventReactive(input$SelectedCRM, {
+        # CRMsDataTable <- loadFromDataBase(CRMsData_TableName, SelectedElem())
+        CRMsDataTable <- loadFromDataBase(CRMsData_TableName, CRM = input$SelectedCRM)
         if (key == 'Certified') {
-          DT <- copy(CRMsDataTable[
-            CRMsDataTable$CRM.name == input$SelectedCRM, 
-            c('Isotope.amount.ratio', 'Type', 'Unit', 'Value', 'Uncertainty', 'UncertType', 'k.factor')])
+          columns <- c('IsotopeAmountRatio', 'Type', 'Unit', 'Value', 'Uncertainty', 'UncertType', 'k_factor')
         } else {
-          DT <- copy(CRMsDataTable[
-            CRMsDataTable$CRM.name == input$SelectedCRM, 
-            c('Isotope.amount.ratio', 'Unit', 'Value', 'Uncertainty', 'UncertType', 'k.factor', 'Calibration.standard')])
+          columns <- c('IsotopeAmountRatio', 'Unit', 'Value', 'Uncertainty', 'UncertType', 'k_factor', 'Calibration_standard')
         }
-        
+        DT <- copy(CRMsDataTable[, columns])
         DT$Value <- as.character(DT$Value)
         DT$Uncertainty <- as.character(DT$Uncertainty)
         return(DT)
       })
+      output$Table_CRM_IndivData <- renderTable(Table_CRM_IndivData())
       
       output$UI_CRM_List <- renderUI(UI_CRM_List())
-      output$Table_CRM_List <- DT::renderDataTable(Table_CRM_List(), escape = FALSE, selection = "single", server = TRUE)#sanitize.text.function = function(x) {x})
+      output$Table_CRM_List <- DT::renderDataTable(Table_CRM_List(), escape = FALSE, selection = "single", server = TRUE)
     }
   )
 }
@@ -84,7 +105,7 @@ crmSummary <- function(Producer, Data, key) {
       <td class="tg-value"><a href="', Producer$URL, '" target=_blank">', Producer$ProducerFullName, '</a></td></tr>
       <tr style="height: 10px !important;"><td colspan="2"></td></tr>
       <tr><th class="tg-field">CRM name:</th>
-      <th class="tg-value">', Data$CRM.name, '</th></tr>
+      <th class="tg-value">', Data$CRM_name, '</th></tr>
       <tr><th class="tg-field">Description:</th>
       <th class="tg-value">', Data$Description, '</th></tr>',
     ifelse(key == 'Certified', 

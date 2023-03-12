@@ -10,7 +10,7 @@ library(shinyWidgets)
 library(CIAAWconsensus)
 library(tidyr)
 library(stringr)
-# library(odbc)
+library(odbc)
 library(RMySQL)
 library(writexl)
 library(rhandsontable)
@@ -46,8 +46,8 @@ ui <- fluidPage(
       icon = icon('compass'), value = 'Home', tags$hr(), tags$hr(),
       fluidRow(
         column(
-          width = 8,
-          h4(style = 'margin-left: 50px;', ('Select an element from the periodic table below:')),
+          width = 7,
+          h4(style = 'margin-left: 50px;', ('Select an element from the periodic table below:'), tags$br()),
           includeHTML('www/PeriodicTable.html')),
         # uiOutput('ColumnPeriodTable'), 
         ShowDataUI('ShowData')
@@ -83,20 +83,17 @@ server <- function(input, output, session, devMode = TRUE) {
       actionButton(inputId = 'brwz', label = tags$b('Pause App')))))
   observeEvent(input$brwz, browser())
   
+  CRMproducers <- loadFromDataBase('CRMproducers')
+  MeasuReports <- loadFromDataBase('MeasuReports')
+  MeasRepoAuth <- loadFromDataBase('MeasRepoAuth')
+  
   SelectedElem <- reactive(tolower(input$SelectedElement))
   
-  
-  # ColumnPeriodTable <- reactive({
-  #   ColSize <- ifelse(is.null(SelectedElem()), 8, 5)
-  #   ColumnPeriodTable <- 0
-  #   return(ColumnPeriodTable)
-  # })
-  # output$ColumnPeriodTable <- renderUI(ColumnPeriodTable())
-  
-  ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem)
+  ShowDataServer('ShowData', devMode = devMode, SelectedElem = SelectedElem,
+                 CRMproducers = CRMproducers, MeasuReports = MeasuReports, MeasRepoAuth = MeasRepoAuth)
   
   UploadDataServer('UploadData', devMode = devMode,
-                   TableProducers = loadFromDataBase('CRMproducers'), TableStudies = loadFromDataBase('MeasuReports'))
+                   TableProducers = CRMproducers, TableStudies = MeasuReports)
   
 }
 
