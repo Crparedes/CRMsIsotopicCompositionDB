@@ -33,13 +33,14 @@ GenericPeriodicTable <- read.csv(file = 'www/IsotopicData/RAW_GenericPeriodicTab
 
 
 ShyTheme <- shinytheme("yeti")
-windowTitle <- 'MRCs Isotopic Composition DataBase'
+windowTitle <- 'CRMs Isotopic Composition DataBase'
+CRMsICDBversion <- 'v.0.0.13.9999'
 
 ui <- fluidPage(
   withMathJax(),
   useShinyjs(),
   navbarPage(
-    title = title, windowTitle = 'MRCs Isotopic Composition DataBase', id = 'MainNavTabs',# selected = 'Home',
+    title = title, windowTitle = windowTitle, id = 'MainNavTabs',# selected = 'Home',
     theme = ShyTheme, position = 'fixed-top', collapsible = TRUE, lang = 'en',
     tabPanel(
       title = HTML('Explore<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'), 
@@ -63,6 +64,7 @@ ui <- fluidPage(
     ),
     footer = tags$div(
       style = 'margin-left: 50px; margin-top: 20px',
+      tags$b('App version ', CRMsICDBversion), tags$hr(),
       materialSwitch(inputId = 'Desarrollador', status = 'primary', value = FALSE,
                      label = h6(style = "display: inline;", 'Developer tools')),
       uiOutput('brwz'))
@@ -79,8 +81,8 @@ server <- function(input, output, session, devMode = TRUE) {
   devMode <- reactive(input$Desarrollador)
   output$brwz <- renderUI(
     if(devMode()) return(tags$span(
-      tags$b('These buttons will not work if running in a server.'), 
-      actionButton(inputId = 'brwz', label = tags$b('Pause App')))))
+      tags$b('The', tags$em('Pause and inspect'), 'buttons will not work if running the app in a server: '), 
+      actionButton(inputId = 'brwz', class = 'PauBtn', label = tags$b('Pause and inspect App')))))
   observeEvent(input$brwz, browser())
   
   CRMproducers <- loadFromDataBase('CRMproducers')

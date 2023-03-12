@@ -13,7 +13,8 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, icono, descripti
   moduleServer(
     id,
     function(input, output, session) {
-      output$brwz <- renderUI(if(devMode()) return(actionButton(session$ns('brwz'), label = tags$b('Pause submodule'))))
+      output$brwz <- renderUI(if(devMode()) return(actionButton(session$ns('brwz'), class = 'PauBtn', 
+                                                                label = tags$b('Pause and inspect submodule'))))
       observeEvent(input$brwz, browser())
       
       AcLnk <- eventReactive(SelectedElem(), ignoreInit = TRUE, {

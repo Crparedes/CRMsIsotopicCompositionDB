@@ -5,9 +5,9 @@ account: crparedes
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 8347855
-bundleId: 6947277
+bundleId: 6947374
 url: https://crparedes.shinyapps.io/CRMsIsotopicCompositionDB/
-when: 1678588683.85464
-lastSyncTime: 1678588683.85464
+when: 1678592598.94116
+lastSyncTime: 1678592598.94116
 asMultiple: FALSE
 asStatic: FALSE

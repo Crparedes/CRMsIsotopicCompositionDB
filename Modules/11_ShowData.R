@@ -24,7 +24,7 @@ ShowDataServer <- function(id, devMode, SelectedElem, CRMproducers, MeasuReports
   moduleServer(
     id,
     function(input, output, session) {
-      output$brwz <- renderUI(if(devMode()) return(actionButton(session$ns('brwz'), label = tags$b('Pause module'))))
+      output$brwz <- renderUI(if(devMode()) return(actionButton(session$ns('brwz'), class = 'PauBtn', label = tags$b('Pause and inspect module'))))
       observeEvent(input$brwz, browser())
       
       observe(toggleElement(condition = nrow(isotopes()) > 1, selector = 'div.CRMsActionLinks',
@@ -46,8 +46,10 @@ ShowDataServer <- function(id, devMode, SelectedElem, CRMproducers, MeasuReports
         }})
         
         IUPAC_CIAAW <- reactive({
+          FullInfo <- tags$a('See full information on the IUPAC CIAAW webpage.', target = '_blank',
+                             href = paste0('https://ciaaw.org/', tolower(SelectedElem()), '.htm'))
           if (nrow(isotopes()) < 2) {
-            return(NoIsotopesMessage)
+            return(tags$div(NoIsotopesMessage, FullInfo))
           } else {
             Notes <- CIAAW_NatIsotAbunFtnts[CIAAW_NatIsotAbunFtnts$Note == strsplit(isotopes()$Notes[1], '')[[1]], 2]
             UncertStat <- ifelse(
@@ -56,8 +58,7 @@ ShowDataServer <- function(id, devMode, SelectedElem, CRMproducers, MeasuReports
               'For isotopic relative abundances the uncertainties are given  in parentheses, following the last significant digit to which they are attributed.')
             Notes <- as.list(c(UncertStat, Notes))  
             return(tags$div(
-              tags$a('See full information on the IUPAC CIAAW webpage.', target = '_blank',
-                     href = paste0('https://ciaaw.org/', tolower(SelectedElem()), '.htm')),
+              FullInfo,
               tags$hr(), dataTableOutput(session$ns('IUPAC_Table')), tags$hr(),
               tags$div(style = 'font-size: 0.7vw;',
                 tags$b('Notes:'), 

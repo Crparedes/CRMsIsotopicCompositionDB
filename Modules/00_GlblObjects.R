@@ -1,4 +1,3 @@
-MRCsICDBversion <- '0.0.1.9000'
 DummyNumber <- c(0, 0.123456789)
 
 title <- tags$div(HTML(
@@ -9,9 +8,8 @@ title <- tags$div(HTML(
   <img src = "logo.png" height = "90" alt = "LOGO" style = "margin-top:5px">
   </a>', spcs(5),
   '</th>
-  <th><h1 style="LINE-HEIGHT:25px; color: #dddddd; margin-bottom: 5px;">
-    <b>Isotopic Composition Database</b>
-    <b style="LINE-HEIGHT:5px; color: #dddddd; font-size:14px;">v.0.0.1.9000</b>
+  <th><h1 style="LINE-HEIGHT:20px; color: #dddddd; margin-bottom: 5px; font-weight: 500">
+    Isotopic Composition Database
   </h1></th></tr>
   <tr><th><h3 style="LINE-HEIGHT:0px; color: #dddddd; margin-top: 20px;">
   for Certified Reference Materials

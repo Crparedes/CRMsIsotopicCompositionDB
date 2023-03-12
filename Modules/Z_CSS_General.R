@@ -11,6 +11,9 @@ headTags1 <- tags$li(
     # Dialogo modal
     tags$style(HTML('.modal-dialog { width: fit-content !important; }')),
     
+    # Botones de pausa
+    tags$style(HTML('.PauBtn {font-size: 0.8vw;     line-height: 0.5;}')),
+
     # labels
     tags$style(HTML('label, .control-label, .help-block, .checkbox, .radio {
         font-size: 1em;

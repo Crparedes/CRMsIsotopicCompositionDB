@@ -48,7 +48,8 @@ UploadDataServer <- function(id, devMode, TableProducers, TableStudies) {
   moduleServer(
     id,
     function(input, output, session) {
-      output$brwz <- renderUI(if(devMode()) return(actionButton(session$ns('brwz'), label = tags$b('Pause module'))))
+      output$brwz <- renderUI(if(devMode()) return(actionButton(session$ns('brwz'), class = 'PauBtn',
+                                                                label = tags$b('Pause and inspect module'))))
       observeEvent(input$brwz, browser())
       
       Producer <- UploadProduStudyServer(
