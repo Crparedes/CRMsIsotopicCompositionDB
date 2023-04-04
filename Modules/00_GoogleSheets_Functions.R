@@ -5,7 +5,10 @@ if (FALSE) { # Run this only once
   list.files(".secrets/")
   gs4_deauth()
 }
-gs4_auth(cache = ".secrets", email = "craparedesca@unal.edu.co")
+gs4_auth_configure(api_key = "AIzaSyAZK7lbllXJ76f_kBfGxwfQvHwm4RKOKx8")
+gs4_deauth()
+
+# gs4_auth(cache = ".secrets", email = "craparedesca@unal.edu.co")
 
 
 ## See secttion 6 of https://shiny.rstudio.com/articles/persistent-data-storage.html#mysql
