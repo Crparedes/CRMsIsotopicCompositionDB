@@ -5,6 +5,10 @@ if (FALSE) { # Run this only once
   list.files(".secrets/")
   gs4_deauth()
 }
+## Previous lines do not work when deployed on server. 
+## See https://gargle.r-lib.org/articles/non-interactive-auth.html 
+## and https://gargle.r-lib.org/articles/get-api-credentials.html
+
 gs4_auth_configure(api_key = "AIzaSyAZK7lbllXJ76f_kBfGxwfQvHwm4RKOKx8")
 gs4_deauth()
 
