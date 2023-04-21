@@ -30,6 +30,7 @@ sapply(c(modules), source)
  #### Source following lines to construct initial tables to be used in 
  ### source('www/IsotopicData/02_INITIAL_DataTableConstruction.R')
 
+source('www/Credentials.R')
 source('www/IsotopicData/01_CIAAW_WebPageRvesting.R')
 GenericPeriodicTable <- read.csv(file = 'www/IsotopicData/RAW_GenericPeriodicTable.csv')
 

@@ -1,13 +1,13 @@
 UploadProduStudyUI <- function(id, key) {
   ns <- NS(id)
   tags$div(
-    uiOutput(ns('brwz')),
+    tags$hr(), uiOutput(ns('brwz')),
     uiOutput(ns('selectKreator')),
     conditionalPanel("input.selectedKreator == 'Other'", ns = ns, uiOutput(ns('NewProdInfo'))),
     tags$br())
 }
 
-UploadProduStudyServer <- function(id, id2, devMode, key, TableKreators) {
+UploadProduStudyServer <- function(id, id2, devMode, key, TableKreators, DataEntryClerk) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -15,8 +15,12 @@ UploadProduStudyServer <- function(id, id2, devMode, key, TableKreators) {
                                                                 label = tags$b('Pause and inspect submodule'))))
       observeEvent(input$brwz, browser())
       
+      output$Subbrwz <- renderUI(if(devMode()) return(actionButton(session$ns('Subbrwz'), class = 'PauBtn', 
+                                                                label = tags$b('Pause and inspect submodule'))))
+      observeEvent(input$Subbrwz, browser())
+      
       item <- reactive(ifelse(
-        key == 'Producer', 'CRM producer', 'measurement report'))
+        key == 'Producer', 'producer of the CRM', 'measurement report'))
       choiceValues <- reactive(ifelse(
         key == 'Producer', return(c(TableKreators$Producer, 'Other')), return(c('Other', TableKreators$Report.DOI))))
       choiceNames <- reactive(ifelse(
@@ -41,10 +45,10 @@ UploadProduStudyServer <- function(id, id2, devMode, key, TableKreators) {
           req(input$selectedKreator)
           if (input$selectedKreator == 'Other') {
             countries <- countrycode::codelist$country.name.en
-            
-              c(ReqField('Authors:'), ReqField('Year:'), NonReqField('Journal:'), ReqField('Issue:'), ReqField('Pages:'),
-                ReqField('Title:'), ReqField('Technique:'), ReqField('Instrument used:'))
+            c(ReqField('Authors:'), ReqField('Year:'), NonReqField('Journal:'), ReqField('Issue:'), ReqField('Pages:'),
+              ReqField('Title:'), ReqField('Technique:'), ReqField('Instrument used:'))
             fieldsKreator <- colnames(TableKreators)
+            
             if (key == 'Producer') {
               NewEntryInputs <- list(
                 textInput(session$ns(fieldsKreator[1]), label = ReqField('Short name:'), placeholder = 'Acronym', width = '180px'),
@@ -57,7 +61,8 @@ UploadProduStudyServer <- function(id, id2, devMode, key, TableKreators) {
                                               onInitialize = I('function() { this.setValue(""); }'))))
             } else {
               NewEntryInputs <- list(
-                textInput(session$ns(fieldsKreator[1]), label = ReqField('Authors:'), placeholder = 'Separated by commas', width = '180px'),
+                textInput(session$ns(fieldsKreator[1]), label = ReqField('Authors:'),
+                          placeholder = 'Author names separated by comma', width = '180px'),
                 textInput(session$ns(fieldsKreator[6]), label = ReqField('Report title:'), width = '180px'),
                 numericInput(session$ns(fieldsKreator[2]), label = ReqField('Year:'), width = '180px',
                              min = 1900, max = 2025, value = NULL),
@@ -77,6 +82,7 @@ UploadProduStudyServer <- function(id, id2, devMode, key, TableKreators) {
                        tags$b(style = 'color: red;', 'This inputs do not work well yet'),
                        tags$br(), NewEntryInputs),
               tags$br(), uiOutput(session$ns('BadNewKreator')),
+              uiOutput(session$ns('Subbrwz')),
               splitLayout(
                 actionButton(session$ns('createNewKreator'), label = tags$b('Record new ', item())),
                 actionButton(session$ns('cancelNewKreator'), label = tags$b('Cancel writing to database')))
@@ -85,19 +91,27 @@ UploadProduStudyServer <- function(id, id2, devMode, key, TableKreators) {
         })
 
         observeEvent(input$createNewKreator, {
-          fields2Check <- ifelse(
+          Incompleto <- ifelse(
             key == 'Producer',
-            c(input$Producer, input$ProducerFullName, input$Country, input$URL),
-            c()
+            are.null.empty(c(input$Producer, input$ProducerFullName, input$Country, input$URL)),
+            are.null.empty(c())
           )
           
-          if (are.null.empty(fields2Check)) {
-            output$BadNewKreator <- renderUI(tags$b(style = 'color: red;', 'Please fill in all required fields.'))
+          if (Incompleto) {
+            output$BadNewKreator <- renderUI(tags$b(
+              style = 'color: red;', 'Please fill in all required fields.'))
           } else {
-            # removeModal()
-            output$NewProdInfo <- renderUI(tags$div(
-              tags$b('New ', item(), ' in the database: '), input$Producer, ', ',
-              tags$a(input$ProducerFullName, href = input$URL, target = '_blank')))
+            if (input$Producer %in% TableKreators$Producer) {
+              output$BadNewKreator <- renderUI(tags$b(
+                style = 'color: red;', 'ERROR: The', input$Producer, 'seems to be already recorded in the data base.'))
+            } else {
+              removeModal()
+              # saveData(tableName = TableKreators, data = )
+              output$NewProdInfo <- renderUI(tags$div(
+                tags$b('New ', item(), ' in the database: '),
+                tags$a(input$Producer, ', ', paste0(input$ProducerFullName),
+                       href = input$URL, target = '_blank')))
+            }
           }
         })
 
