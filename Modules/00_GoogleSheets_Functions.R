@@ -34,7 +34,7 @@ saveData <- function(tableName, data) {
   sheet_append(ss = SHEET_ID, data = data, sheet = tableName)
 }
 
-loadFromDataBase <- function(tableName, element = NULL, CRM = NULL) {
+loadFromGoogleSheetsDataBase <- function(tableName, element = NULL, CRM = NULL) {
   table <- data.frame(read_sheet(ss = SHEET_ID, sheet = tableName))
   if (missing(element) && missing(CRM)) {
     return(table)
