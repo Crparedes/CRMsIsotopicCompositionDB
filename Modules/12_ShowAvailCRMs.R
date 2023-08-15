@@ -29,7 +29,7 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, icono, descripti
       
       
       
-      CRMsInfoTable <- eventReactive(input$AcLnk, loadFromGoogleSheetsDataBase(Info_TableName, element = SelectedElem()))
+      CRMsInfoTable <- eventReactive(input$AcLnk, loadFromDataBase(Info_TableName, element = SelectedElem()))
       
       
       NoInfo <- reactive(paste0('There are no entries yet for ', tolower(SelectedElem()), ' in this category.'))
@@ -78,11 +78,11 @@ ShowAvailCRMsServer <- function(id, id2, devMode, SelectedElem, icono, descripti
       
       Table_CRM_IndivData <- eventReactive(input$SelectedCRM, {
         # CRMsDataTable <- loadFromGoogleSheetsDataBase(CRMsData_TableName, SelectedElem())
-        CRMsDataTable <- loadFromGoogleSheetsDataBase(CRMsData_TableName, CRM = input$SelectedCRM)
+        CRMsDataTable <- loadFromDataBase(CRMsData_TableName, CRM = input$SelectedCRM)
         if (key == 'Certified') {
           columns <- c('IsotopeAmountRatio', 'Type', 'Unit', 'Value', 'Uncertainty', 'UncertType', 'k_factor')
         } else {
-          columns <- c('IsotopeAmountRatio', 'Unit', 'Value', 'Uncertainty', 'UncertType', 'k_factor', 'Calibration_standard')
+          columns <- c('IsotopeAmountRatio', 'Unit', 'Value', 'Uncertainty', 'UncertType', 'k_factor', 'Calibration_standards')
         }
         DT <- copy(CRMsDataTable[, columns])
         DT$Value <- as.character(DT$Value)
