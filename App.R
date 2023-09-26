@@ -40,6 +40,13 @@ windowTitle <- 'CRMs Isotopic Composition DataBase'
 CRMsICDBversion <- 'v.0.0.13.9999'
 
 ui <- fluidPage(
+  tags$head(tags$script('
+                        var width = 1;
+                        $(document).on("shiny:connected", function(e) {
+                          width = window.innerWidth/1900;
+                          document.body.style.zoom = Math.sqrt(width);
+                        });
+                        ')),
   withMathJax(),
   useShinyjs(),
   navbarPage(
@@ -82,6 +89,8 @@ ui <- fluidPage(
 
 server <- function(input, output, session, devMode = TRUE) {
   devMode <- reactive(input$Desarrollador)
+  showNotification(tags$b("This app is under development"), type = 'warning')
+  
   output$brwz <- renderUI(
     if(devMode()) return(tags$span(
       tags$b('The', tags$em('Pause and inspect'), 'buttons will not work if running the app in a server: '), 
